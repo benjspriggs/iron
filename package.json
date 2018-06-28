@@ -2,7 +2,7 @@
   "name": "iron",
   "version": "0.0.1",
   "author": "Benjamin Spriggs",
-  "engine": {
+  "engines": {
 	"node": "10.x.x",
 	"npm": "0.33.x"
   },
