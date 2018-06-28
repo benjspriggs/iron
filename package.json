@@ -2,6 +2,10 @@
   "name": "iron",
   "version": "0.0.1",
   "author": "Benjamin Spriggs",
+  "engine": {
+	  "node": "10.x.x",
+	  "npm": "6.1.0"
+  },
   "dependencies": {
     "ampersand-app": "^1.0.0",
     "ampersand-dom": "^1.2.1",
