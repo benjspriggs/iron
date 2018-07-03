@@ -2,5 +2,10 @@
 	"name": "iron",
 	"description": "A dead simple plaintext blog CMS",
 	"repository": "https://github.com/benjspriggs/iron",
-	"keywords": ["node", "ampersand", "cms", "blog", "git"]
+	"keywords": ["node", "ampersand", "cms", "blog", "git"],
+	"buildpacks": [
+		{
+			"url": "heroku/nodejs"
+		}
+	]
 }
