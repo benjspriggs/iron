@@ -54,4 +54,4 @@ Curated modules: http://tools.ampersandjs.com/
 
 Ampersand was built by folks at [&yet](http://andyet.com).
 
-`iron` was written primarily by Benjamin Spriggs.
+`iron` was written primarily by Benjamin Spriggs (@bspriggs on Github). [Contact](mailto:ben@sprico.com).
