@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "author": "Benjamin Spriggs",
   "engines": {
-	  "node": "10.x.x",
-	  "npm": "6.1.0"
+    "node": "10.x.x",
+    "npm": "6.1.0"
   },
   "dependencies": {
     "ampersand-app": "^1.0.0",
@@ -50,5 +50,10 @@
     "undef": true,
     "white": true
   },
-  "main": "server.js"
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjspriggs/iron.git"
+  },
+  "license": "MIT"
 }
