@@ -1,5 +1,11 @@
 # iron
 
+|           |                                                                                                                     |
+| ---       | ---                                                                                                                 |
+| Travis CI | [![Build Status](https://travis-ci.com/benjspriggs/iron.svg?branch=master)](https://travis-ci.com/benjspriggs/iron) |
+| Heroku    | [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)                                 |
+
+
 ## What is it?
 
 A dead simple plaintext-oriented blog tool. Designed to be used at the command line, revolving around your favorite version control system of choice.
