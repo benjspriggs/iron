@@ -2,7 +2,29 @@
 
 ## What is it?
 
-A dead simple Markdown-oriented blog tool. Designed to be used at the command line, revolving around your favorite version control system of choice.
+A dead simple plaintext-oriented blog tool. Designed to be used at the command line, revolving around your favorite version control system of choice.
+
+`iron` is a server that can point at a git repo (or host its own) that hosts pretty versions of what's already there, similar to Github Pages. 
+
+The power of `iron` is that it takes a super simple blog format instead of jekyll's more explicit style:
+
+```md
+---
+title: Posts are titled like this
+tags: Have tags like this
+---
+
+And have content like this
+```
+
+versus:
+
+```
+// Posts are titled like this
+And have content like this
+
+#have tags like this #and this
+```
 
 ### Similar apps
 
