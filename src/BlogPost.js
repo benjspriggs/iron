@@ -5,7 +5,7 @@ import {
   Item,
 } from 'semantic-ui-react'
 
-const BlogPost = ({ title, source, content = '', tags = [], date = '' }) => (
+export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) => (
   <Item>
   <Item.Header as="h2">
   { title }

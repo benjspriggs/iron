@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import BlogPost from './BlogPost';
-import { Container, Header } from 'semantic-ui-react';
-import lorem from 'lorem-ipsum';
+import PostsPage from './PostsPage';
+import SettingsPage from './SettingsPage';
+import NoMatch from './NoMatch';
+import { Container, Header, Menu } from 'semantic-ui-react';
+import { Route, Switch } from 'react-router';
+import { Link } from 'react-router-dom';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
       <Container>
-        <Header>
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">iron</h1>
+        <Link to="/">
+        <Header as="h1" >
+        <img src={logo} className="App-logo" alt="logo" />
+          iron
         </Header>
-	    <BlogPost title="hi" source="me" date="1 hour ago"
-	    content={
-		    lorem({
-			    count: 2,
-			    units: "paragraphs"
-		    })
-	    }/>
+        </Link>
+
+        <Menu>
+        <Menu.Item as={Link} to="/">
+        Home
+        </Menu.Item>
+        <Menu.Item as={Link} to="/settings">
+        Settings
+        </Menu.Item>
+        </Menu>
+      <Container>
+      <Switch>
+        <Route exact path="/" component={PostsPage} />
+        <Route exact path="/settings" component={SettingsPage} />
+        <Route component={NoMatch} />
+      </Switch>
+      </Container>
       </Container>
     );
   }
