@@ -3,7 +3,6 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
 import rootReducer from './dux'
-import { composeWithDevTools } from 'redux-devtools-extension'
 
 export const history = createHistory()
 
@@ -18,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
 	const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__
 
 	if (typeof devToolsExtension === 'function') {
-		enhancers.push(composeWithDevTools)
+		enhancers.push(devToolsExtension())
 	}
 }
 
