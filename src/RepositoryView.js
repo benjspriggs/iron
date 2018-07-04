@@ -7,15 +7,14 @@ import {
   List,
   Button,
   Header,
-  Icon
 } from 'semantic-ui-react'
 
 export const DataItem = (item, idx) => (
-  <List.Item key={idx}>
+  <List.Item key={idx} href={item.url}>
   <List.Content>
+  <List.Icon name={item.type === 'dir' ? 'folder' : item.type } />
   <List.Header>
-  <Icon name={item.type === 'dir' ? 'folder' : item.type } />
-  {item.path}
+  <List.Description>{item.path}</List.Description>
   </List.Header>
   {item.sha}
   </List.Content>
