@@ -1,5 +1,5 @@
 import { from, of } from 'rxjs'
-import { map, mergeMap, catchError } from 'rxjs/operators'
+import { mergeMap, catchError } from 'rxjs/operators'
 import Octokit from '@octokit/rest'
 import { createActions, handleActions } from 'redux-actions'
 import { ofType, combineEpics } from 'redux-observable'
@@ -14,16 +14,32 @@ export const {
   [REPO_GET_CONTENT]: options => ({ ...options })
 })
 
-export default (state = {}, action) => {
-  switch(action.type) {
-    case REPO_GET_CONTENT:
-      return { clicked: true }
-    case REPO_GET_CONTENT_DONE:
-      return { clicked: false }
-    default:
-      return state
+export default handleActions({
+  REPO_GET_CONTENT: (state) => ({ ...state, clicked: true }),
+  REPO_GET_CONTENT_DONE: (state, action) => {
+    const {
+      options: {
+        owner,
+        repo
+      },
+    } = action.payload
+
+    const otherRepos = state.repos[owner] || []
+
+    const storeKey = action.error ? 'errors' : 'repos'
+
+    return { 
+      ...state,
+      [storeKey]: {
+        ...state.repos, 
+        [owner]: {
+          ...otherRepos,
+          [repo]: action.payload,
+        }
+      },
+    }
   }
-}
+}, { repos: {} })
 
 export const getContentEpic = action$ =>
   action$.pipe(
@@ -32,14 +48,21 @@ export const getContentEpic = action$ =>
       octokit.repos.getContent({
         ...action.payload
       })).pipe(
-    catchError(e => from({ e })),
-    mergeMap(({data, ...rest}) => of({
-        type: REPO_GET_CONTENT_DONE,
-        payload: data,
-        ...rest,
-      })
-    ),
-  )))
+        mergeMap(({data, ...rest}) => of({
+          type: REPO_GET_CONTENT_DONE,
+          payload: { data, options: action.payload },
+          ...rest,
+        })
+        ),
+        catchError(e => of({ 
+          type: REPO_GET_CONTENT_DONE, 
+          payload: {
+            options: action.payload,
+            error: e, 
+          },
+          error: true
+        })),
+      )))
 
 export const githubEpic = combineEpics(
   getContentEpic

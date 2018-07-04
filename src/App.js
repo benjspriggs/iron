@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import BlogPost from './BlogPost';
+import RepositoryView from './RepositoryView';
+import { Container, Header } from 'semantic-ui-react';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
+      <Container>
+        <Header>
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">iron</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-          <BlogPost />
-      </div>
+        </Header>
+          <RepositoryView options={{owner: 'benjspriggs', repo: 'iron', path: '', }}/>
+          <RepositoryView options={{owner: 'octokit', repo: 'getit', path: '', }}/>
+      </Container>
     );
   }
 }
