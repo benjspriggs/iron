@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { createEpicMiddleware } from 'redux-observable'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
 import rootReducer from './dux'
@@ -10,7 +11,8 @@ const initialState = {}
 const enhancers = []
 const middleware = [
 	thunk,
-	routerMiddleware(history)
+	routerMiddleware(history),
+	createEpicMiddleware()
 ]
 
 if (process.env.NODE_ENV !== 'production') {
