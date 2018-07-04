@@ -1,16 +1,33 @@
 {
-  "name": "iron",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+	"name": "iron",
+	"version": "0.1.0",
+	"private": true,
+	"engines": {
+		"node": "10.x.x",
+		"npm": "6.1.0"
+	},
+	"dependencies": {
+		"connected-react-router": "^4.3.0",
+		"history": "^4.7.2",
+		"react": "^16.4.1",
+		"react-dom": "^16.4.1",
+		"react-redux": "^5.0.7",
+		"react-scripts": "1.1.4",
+		"redux": "^4.0.0",
+		"redux-thunk": "^2.3.0"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test --env=jsdom",
+		"eject": "react-scripts eject"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/benjspriggs/iron.git"
+	},
+	"devDependencies": {
+		"redux-devtools-extension": "^2.13.5"
+	}
 }
