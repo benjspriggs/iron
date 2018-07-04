@@ -49,15 +49,6 @@ And have content like this
 1. run it: `npm start`
 1. open http://localhost:3000 in a browser
 
-## How it's structured
-
-This app was generated with the [ampersand cli tool](http://ampersandjs.com/learn/quick-start-guide).
-
-See docs: http://ampersandjs.com/
-Curated modules: http://tools.ampersandjs.com/
-
 ## Credits
-
-Ampersand was built by folks at [&yet](http://andyet.com).
 
 `iron` was written primarily by Benjamin Spriggs (@benjspriggs on Github). [Contact](mailto:ben@sprico.com).
