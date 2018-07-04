@@ -10,6 +10,7 @@
 		"@octokit/rest": "^15.9.4",
 		"connected-react-router": "^4.3.0",
 		"history": "^4.7.2",
+		"prop-types": "^15.6.2",
 		"react": "^16.4.1",
 		"react-dom": "^16.4.1",
 		"react-redux": "^5.0.7",
@@ -34,6 +35,7 @@
 		"url": "git://github.com/benjspriggs/iron.git"
 	},
 	"devDependencies": {
+		"lorem-ipsum": "^1.0.5",
 		"redux-devtools-extension": "^2.13.5"
 	}
 }

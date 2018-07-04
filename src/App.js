@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import RepositoryView from './RepositoryView';
+import BlogPost from './BlogPost';
 import { Container, Header } from 'semantic-ui-react';
+import lorem from 'lorem-ipsum';
 import './App.css';
 
 class App extends Component {
@@ -12,8 +13,13 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">iron</h1>
         </Header>
-          <RepositoryView options={{owner: 'benjspriggs', repo: 'iron', tree_sha: 'master', }}/>
-          <RepositoryView options={{owner: 'octokit', repo: 'getit', tree_sha: 'master', }}/>
+	    <BlogPost title="hi" source="me" date="1 hour ago"
+	    content={
+		    lorem({
+			    count: 2,
+			    units: "paragraphs"
+		    })
+	    }/>
       </Container>
     );
   }
