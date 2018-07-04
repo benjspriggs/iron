@@ -1,0 +1,11 @@
+{
+  "name": "iron",
+  "description": "A dead simple plaintext blog CMS",
+  "repository": "https://github.com/benjspriggs/iron",
+  "keywords": ["node", "cms", "blog", "git"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
