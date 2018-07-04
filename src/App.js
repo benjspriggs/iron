@@ -12,8 +12,8 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">iron</h1>
         </Header>
-          <RepositoryView options={{owner: 'benjspriggs', repo: 'iron', path: '', }}/>
-          <RepositoryView options={{owner: 'octokit', repo: 'getit', path: '', }}/>
+          <RepositoryView options={{owner: 'benjspriggs', repo: 'iron', tree_sha: 'master', }}/>
+          <RepositoryView options={{owner: 'octokit', repo: 'getit', tree_sha: 'master', }}/>
       </Container>
     );
   }

@@ -15,7 +15,7 @@ export const DataItem = (item, idx) => (
   <List.Content>
   <List.Header>
   <Icon name={item.type === 'dir' ? 'folder' : item.type } />
-  {item.name}
+  {item.path}
   </List.Header>
   {item.sha}
   </List.Content>
@@ -27,7 +27,7 @@ export const RepositoryView = ({ options, repo, onClick }) => (
   <Header as="h3">{ options.owner }</Header>
   <Button onClick={onClick}>Refresh</Button>
   <List>
-  { repo === undefined ? 'No repo' : repo.data.map(DataItem) }
+  { repo === undefined ? 'No repo' : repo.data.tree.map(DataItem) }
   </List>
   </Container>
 )
@@ -41,13 +41,14 @@ export default connect(
       const {
         owner = 'benjspriggs',
         repo = 'iron',
-        path = ''
+        tree_sha = ''
       } = props.options || {}
 
       dispatch(repoGetContent({
         owner,
         repo,
-        path
+        tree_sha,
+	      recursive: 1
       }))
     }
   })

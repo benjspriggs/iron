@@ -45,7 +45,7 @@ export const getContentEpic = action$ =>
   action$.pipe(
     ofType(REPO_GET_CONTENT),
     mergeMap(action => from(
-      octokit.repos.getContent({
+      octokit.gitdata.getTree({
         ...action.payload
       })).pipe(
         mergeMap(({data, ...rest}) => of({
