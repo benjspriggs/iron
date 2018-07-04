@@ -1,6 +1,11 @@
 import { combineReducers } from 'redux'
-import { routerReducer } from 'connected-react-router'
+import github, { githubEpic } from './github'
+import { combineEpics } from 'redux-observable'
 
 export default combineReducers({
-	routing: routerReducer
+	github: github
 })
+
+export const rootEpic = combineEpics(
+	githubEpic
+)

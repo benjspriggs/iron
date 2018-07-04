@@ -3,16 +3,17 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createEpicMiddleware } from 'redux-observable'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
-import rootReducer from './dux'
+import rootReducer, { rootEpic } from './dux'
 
 export const history = createHistory()
+export const epicMiddleware = createEpicMiddleware()
 
 const initialState = {}
 const enhancers = []
 const middleware = [
 	thunk,
 	routerMiddleware(history),
-	createEpicMiddleware()
+	epicMiddleware,
 ]
 
 if (process.env.NODE_ENV !== 'production') {
@@ -33,6 +34,8 @@ const store = createStore(
 	initialState,
 	composedEnhancers
 )
+
+epicMiddleware.run(rootEpic)
 
 export default store
 
