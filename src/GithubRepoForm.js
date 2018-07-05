@@ -1,10 +1,19 @@
 import React from 'react'
 import { withFormik } from 'formik'
 import * as yup from 'yup'
+import _ from 'lodash'
 import {
   Form,
   Button,
+  Message,
 } from 'semantic-ui-react'
+
+import {
+  FormField,
+  ResetButton,
+  SubmitButton,
+  ErrorDisplay,
+} from './FormField'
 
 const GithubRepoForm = props => {
   const {
@@ -21,51 +30,41 @@ const GithubRepoForm = props => {
 
   return (
     <Form onSubmit={handleSubmit}>
-    <Form.Field>
-      <label htmlFor="email">
-      Email
-      </label>
-      <input
-      id="email"
-      placeholder="Enter your email"
-      type="text"
-      value={values.email}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      className={errors.email && touched.email ? 'text-input error' : 'text-input'}
+    <Form.Group>
+      <FormField 
+      {...props}
+      id={"owner"}
+      label={"Owner"}
+      placeholder={"Enter the repository owner"}
       />
-      {errors.email &&
-        touched.email && <div className="input-feedback">{errors.email}</div>}
-    </Form.Field>
 
-    <Button
-    type="button"
-    className="outline"
-    onClick={handleReset}
-    disabled={!dirty || isSubmitting}
-    >
-    Reset
-    </Button>
-    <Button type="submit" disabled={isSubmitting}>
-    Submit
-    </Button>
+      <FormField
+      {...props}
+      id={"repo"}
+      label={"Repository Name"}
+      placeholder={"Enter the repository name"}
+      />
+    </Form.Group>
 
+    <ResetButton {...props} />
+    <SubmitButton {...props} />
+
+    { _.isEmpty(errors) ? '' : <ErrorDisplay errors={errors} /> }
     </Form>
   )
 }
 
 export default withFormik({
-  mapPropsToValues: () => ({ email: '' }),
-    validationSchema: yup.object().shape({
-          email: yup.string()
-            .email('Invalid email address')
-            .required('Email is required!'),
-        }),
-    handleSubmit: (values, { setSubmitting }) => {
-          setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  setSubmitting(false);
-                }, 1000);
-        },
-    displayName: 'BasicForm', // helps with React DevTools
+  displayName: 'GithubRepoForm',
+  mapPropsToValues: () => ({ owner: '', repo: '' }),
+  validationSchema: yup.object().shape({
+    owner: yup.string().required(),
+    repo: yup.string().required(),
+  }),
+  handleSubmit: (values, { setSubmitting }) => {
+    setTimeout(() => {
+      alert(JSON.stringify(values, null, 2));
+      setSubmitting(false);
+    }, 1000);
+  },
 })(GithubRepoForm)
