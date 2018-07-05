@@ -4,8 +4,6 @@ import * as yup from 'yup'
 import _ from 'lodash'
 import {
   Form,
-  Button,
-  Message,
 } from 'semantic-ui-react'
 
 import {
@@ -17,15 +15,8 @@ import {
 
 const GithubRepoForm = props => {
   const {
-    values,
-    touched,
     errors,
-    dirty,
-    isSubmitting,
-    handleChange,
-    handleBlur,
     handleSubmit,
-    handleReset,
   } = props
 
   return (
