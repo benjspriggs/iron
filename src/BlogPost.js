@@ -2,24 +2,22 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Container,
-  Item,
+  Header,
 } from 'semantic-ui-react'
 
 export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) => (
-  <Item>
-    <Item.Content>
-      <Item.Header as="h2">
+  <Container>
+      <Header as="h2">
       { title }
-      </Item.Header>
-
-      <Item.Extra>
+      <Header.Subheader>
       by { source }, { date }
-      </Item.Extra>
+      </Header.Subheader>
+      </Header>
+
       <Container text>
       {content}
       </Container>
-    </Item.Content>
-  </Item>
+  </Container>
 )
 
 BlogPost.propTypes = {
