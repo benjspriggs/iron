@@ -7,17 +7,18 @@ import {
 
 export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) => (
   <Item>
-  <Item.Header as="h2">
-  { title }
-  </Item.Header>
-  <Item.Content>
-    <Item.Extra>
-    by { source }, { date }
-    </Item.Extra>
-    <Container text>
-    {content}
-    </Container>
-  </Item.Content>
+    <Item.Content>
+      <Item.Header as="h2">
+      { title }
+      </Item.Header>
+
+      <Item.Extra>
+      by { source }, { date }
+      </Item.Extra>
+      <Container text>
+      {content}
+      </Container>
+    </Item.Content>
   </Item>
 )
 

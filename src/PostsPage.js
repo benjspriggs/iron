@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 
 const generatePosts = () => _.times(10, i => ({
   title: "anything",
-  content: lorem({ count: 10, units: "paragraphs" }),
+  content: lorem({ count: 5, units: "paragraphs" }),
   source: "me",
 }))
 
