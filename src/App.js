@@ -14,7 +14,7 @@ class App extends Component {
       <Container>
         <Header as="h1" attached="top">
         <Image src={logo} className="App-logo" alt="logo" />
-      iron
+        iron
       </Header>
 
       <Segment attached>
@@ -28,13 +28,13 @@ class App extends Component {
         </Menu>
       </Segment>
 
-      <Container>
-      <Switch>
-        <Route exact path="/" component={PostsPage} />
-        <Route exact path="/settings" component={SettingsPage} />
-        <Route component={NoMatch} />
-      </Switch>
-      </Container>
+	      <Container>
+          <Switch>
+            <Route exact path="/" component={PostsPage} />
+            <Route exact path="/settings" component={SettingsPage} />
+            <Route component={NoMatch} />
+          </Switch>
+	      </Container>
       </Container>
     );
   }
