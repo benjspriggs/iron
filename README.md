@@ -44,6 +44,10 @@ And have content like this
 
 ## How do I get started?
 
+If you want to see how it looks, click the 'Deploy to Heroku' button and Heroku will take care of the rest.
+
+For getting started locally:
+
 1. download/install [node.js](http://nodejs.org/)
 1. install dependencies: `npm install`
 1. run it: `npm start`
