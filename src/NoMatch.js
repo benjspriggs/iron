@@ -1,3 +1,4 @@
 import React from 'react'
+import { Container } from 'semantic-ui-react';
 
-export default () => <div>No match</div>
+export default () => <Container>No match</Container>
