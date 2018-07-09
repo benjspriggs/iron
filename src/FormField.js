@@ -26,7 +26,7 @@ export const FormField = ({
 )
 
 FormField.propTypes = {
-  id: PropTypes.string.required,
+  id: PropTypes.string.isRequied,
   label: PropTypes.string,
 }
 
