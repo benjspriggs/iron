@@ -1,7 +1,6 @@
 import React from 'react'
 import { withFormik } from 'formik'
 import * as yup from 'yup'
-import _ from 'lodash'
 import {
   Form,
 } from 'semantic-ui-react'
@@ -15,7 +14,6 @@ import {
 
 const GithubRepoForm = props => {
   const {
-    errors,
     handleSubmit,
   } = props
 
@@ -40,7 +38,7 @@ const GithubRepoForm = props => {
     <ResetButton {...props} />
     <SubmitButton {...props} />
 
-    { _.isEmpty(errors) ? '' : <ErrorDisplay errors={errors} /> }
+    <ErrorDisplay {...props} />
     </Form>
   )
 }

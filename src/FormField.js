@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 import {
   Form,
@@ -54,10 +55,24 @@ export const SubmitButton = ({
 )
 
 export const ErrorDisplay = ({
-  errors
-}) => (
-  <Message negative
-  header="Error"
-  list={Object.values(errors)}
-  />
-)
+  errors,
+  touched,
+}) => {
+  if (_.isEmpty(errors)) {
+    return null
+  }
+
+  const filteredKeys = Object
+    .keys(errors)
+    .filter(k => touched[k])
+    .reduce((obj, k) => ({ ...obj, [k]: errors[k] }), {})
+
+  if (_.isEmpty(filteredKeys)) {
+    return null
+  } else {
+  return (<Message negative
+          header="Error"
+          list={Object.values(filteredKeys)}
+          />)
+  }
+}
