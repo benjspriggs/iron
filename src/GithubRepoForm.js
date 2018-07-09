@@ -4,7 +4,9 @@ import * as yup from 'yup'
 import {
   Form,
 } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 
+import { repoGetContent } from './dux/github'
 import {
   FormField,
   ResetButton,
@@ -43,17 +45,21 @@ const GithubRepoForm = props => {
   )
 }
 
-export default withFormik({
+export default connect(
+  null,
+  dispatch => ({ 
+    repoGetContent: (values) => dispatch(repoGetContent({ ...values, tree_sha: 'master' }))
+  })
+)(withFormik({
   displayName: 'GithubRepoForm',
   mapPropsToValues: () => ({ owner: '', repo: '' }),
   validationSchema: yup.object().shape({
     owner: yup.string().required(),
     repo: yup.string().required(),
   }),
-  handleSubmit: (values, { setSubmitting }) => {
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2));
-      setSubmitting(false);
-    }, 1000);
+  handleSubmit: (values, { props: { repoGetContent }, setSubmitting }) => {
+    setSubmitting(true)
+    repoGetContent(values)
+    setSubmitting(false)
   },
-})(GithubRepoForm)
+})(GithubRepoForm))
