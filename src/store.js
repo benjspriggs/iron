@@ -28,9 +28,9 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const connectedReducer = connectRouter(history)(rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const persistedReducer = persistReducer(persistConfig, connectedReducer)
+const connectedReducer = connectRouter(history)(persistedReducer)
 
 const composedEnhancers = compose(
   applyMiddleware(...middleware),
@@ -38,7 +38,7 @@ const composedEnhancers = compose(
 )
 
 const store = createStore(
-  persistedReducer,
+  connectedReducer,
   initialState,
   composedEnhancers
 )
