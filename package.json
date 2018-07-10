@@ -20,7 +20,10 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"test:ci": "CI=true npm test",
+		"precommit": "npm run test:ci",
+		"prepush": "npm run test:ci"
 	},
 	"license": "MIT",
 	"repository": {
@@ -28,6 +31,7 @@
 		"url": "git://github.com/benjspriggs/iron.git"
 	},
 	"devDependencies": {
+		"husky": "^0.14.3",
 		"redux-devtools-extension": "^2.13.5"
 	}
 }
