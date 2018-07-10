@@ -22,8 +22,8 @@
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject",
 		"test:ci": "CI=true npm test",
-		"precommit": "npm run test:ci",
-		"prepush": "npm run test:ci && npm run lint",
+		"precommit": "lint-staged",
+		"prepush": "lint-staged",
 		"lint": "eslint src",
 		"lint-fix": "eslint --fix src"
 	},
@@ -38,8 +38,13 @@
 		"eslint-plugin-import": "^2.13.0",
 		"eslint-plugin-node": "^6.0.1",
 		"eslint-plugin-promise": "^3.8.0",
+		"eslint-plugin-react": "^7.10.0",
 		"eslint-plugin-standard": "^3.1.0",
 		"husky": "^0.14.3",
+		"lint-staged": "^7.2.0",
 		"redux-devtools-extension": "^2.13.5"
+	},
+	"lint-staged": {
+		"*.js": ["eslint --fix", "git add"]
 	}
 }
