@@ -4,7 +4,8 @@ import { Message } from 'semantic-ui-react'
 
 const ErrorDisplay = ({
   errors,
-  touched
+  touched,
+  extra
 }) => {
   if (_.isEmpty(errors)) {
     return null
@@ -20,7 +21,7 @@ const ErrorDisplay = ({
   } else {
     return (<Message negative
       header="Error"
-      list={Object.values(filteredKeys)}
+      list={[...Object.values(filteredKeys), ...extra]}
     />)
   }
 }
