@@ -23,7 +23,9 @@
 		"eject": "react-scripts eject",
 		"test:ci": "CI=true npm test",
 		"precommit": "npm run test:ci",
-		"prepush": "npm run test:ci"
+		"prepush": "npm run test:ci && npm run lint",
+		"lint": "eslint src",
+		"lint-fix": "eslint --fix src"
 	},
 	"license": "MIT",
 	"repository": {
@@ -31,6 +33,12 @@
 		"url": "git://github.com/benjspriggs/iron.git"
 	},
 	"devDependencies": {
+		"eslint": "^5.1.0",
+		"eslint-config-standard": "^11.0.0",
+		"eslint-plugin-import": "^2.13.0",
+		"eslint-plugin-node": "^6.0.1",
+		"eslint-plugin-promise": "^3.8.0",
+		"eslint-plugin-standard": "^3.1.0",
 		"husky": "^0.14.3",
 		"redux-devtools-extension": "^2.13.5"
 	}
