@@ -8,7 +8,7 @@ import {
 
 const BlogPosts = ({ posts }) => (
   <List>
-    { posts.map(BlogPost) }
+    { posts.map((p, idx) => <BlogPost {...p} key={idx} />) }
   </List>
 )
 
