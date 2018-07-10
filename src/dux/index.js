@@ -4,11 +4,11 @@ import posts, { postsEpic } from './posts'
 import { combineEpics } from 'redux-observable'
 
 export default combineReducers({
-	github: github,
-	posts: posts
+  github: github,
+  posts: posts
 })
 
 export const rootEpic = combineEpics(
-	githubEpic,
-	postsEpic
+  githubEpic,
+  postsEpic
 )

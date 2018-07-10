@@ -1,13 +1,19 @@
 import React from 'react'
 import BlogPost from './BlogPost'
-import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {
-  List,
+  List
 } from 'semantic-ui-react'
 
-export default ({ posts }) => (
+const BlogPosts = ({ posts }) => (
   <List>
-  { posts.map(BlogPost) }
+    { posts.map(BlogPost) }
   </List>
 )
+
+BlogPosts.propTypes = {
+  posts: PropTypes.array
+}
+
+export default BlogPosts

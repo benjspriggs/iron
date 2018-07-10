@@ -5,10 +5,12 @@ import {
   Container
 } from 'semantic-ui-react'
 
-export default () => (
+const SettingsPage = () => (
   <Container>
   The settings page.
-  <GithubRepoForm />
-  <CurrentRepos />
+    <GithubRepoForm />
+    <CurrentRepos />
   </Container>
 )
+
+export default SettingsPage

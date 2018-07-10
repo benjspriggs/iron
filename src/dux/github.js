@@ -8,8 +8,8 @@ export const REPO_GET_CONTENT = 'REPO_GET_CONTENT'
 export const REPO_GET_CONTENT_DONE = 'REPO_GET_CONTENT_DONE'
 export const octokit = Octokit()
 
-export const { 
-  repoGetContent,
+export const {
+  repoGetContent
 } = createActions({
   [REPO_GET_CONTENT]: options => ({ ...options })
 })
@@ -21,22 +21,22 @@ export default handleActions({
       options: {
         owner,
         repo
-      },
+      }
     } = action.payload
 
     const otherRepos = state.repos[owner] || []
 
     const storeKey = action.error ? 'errors' : 'repos'
 
-    return { 
+    return {
       ...state,
       [storeKey]: {
-        ...state.repos, 
+        ...state.repos,
         [owner]: {
           ...otherRepos,
-          [repo]: action.payload,
+          [repo]: action.payload
         }
-      },
+      }
     }
   }
 }, { repos: {} })
@@ -48,21 +48,21 @@ export const getContentEpic = action$ =>
       octokit.gitdata.getTree({
         ...action.payload
       })).pipe(
-        mergeMap(({data, ...rest}) => of({
-          type: REPO_GET_CONTENT_DONE,
-          payload: { data, options: action.payload },
-          ...rest,
-        })
-        ),
-        catchError(e => of({ 
-          type: REPO_GET_CONTENT_DONE, 
-          payload: {
-            options: action.payload,
-            error: e, 
-          },
-          error: true
-        })),
-      )))
+      mergeMap(({data, ...rest}) => of({
+        type: REPO_GET_CONTENT_DONE,
+        payload: { data, options: action.payload },
+        ...rest
+      })
+      ),
+      catchError(e => of({
+        type: REPO_GET_CONTENT_DONE,
+        payload: {
+          options: action.payload,
+          error: e
+        },
+        error: true
+      }))
+    )))
 
 export const githubEpic = combineEpics(
   getContentEpic

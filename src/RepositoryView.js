@@ -1,39 +1,50 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { repoGetContent } from './dux/github'
 import _ from 'lodash'
-import { 
-  Container, 
+
+import {
+  Container,
   List,
   Button,
-  Header,
+  Header
 } from 'semantic-ui-react'
 
-export const DataItem = (item, idx) => (
-  <List.Item key={idx} href={item.url}>
-  <List.Content>
-  <List.Icon name={item.type === 'dir' ? 'folder' : item.type } />
-  <List.Header>
-  <List.Description>{item.path}</List.Description>
-  </List.Header>
-  {item.sha}
-  </List.Content>
-  </List.Item>
-  )
+import { repoGetContent } from './dux/github'
 
-export const RepositoryView = ({ options, repo, onClick }) => (
+const DataItem = (item, idx) => (
+  <List.Item key={idx} href={item.url}>
+    <List.Content>
+      <List.Icon name={item.type === 'dir' ? 'folder' : item.type } />
+      <List.Header>
+        <List.Description>{item.path}</List.Description>
+      </List.Header>
+      {item.sha}
+    </List.Content>
+  </List.Item>
+)
+
+const RepositoryView = ({ options, repo, onClick }) => (
   <Container>
-  <Header as="h3">{ options.owner }</Header>
-  <Button onClick={onClick}>Refresh</Button>
-  <List>
-  { repo === undefined ? 'No repo' : repo.data.tree.map(DataItem) }
-  </List>
+    <Header as="h3">{ options.owner }</Header>
+    <Button onClick={onClick}>Refresh</Button>
+    <List>
+      { repo === undefined ? 'No repo' : repo.data.tree.map(DataItem) }
+    </List>
   </Container>
 )
 
+RepositoryView.propTypes = {
+  options: PropTypes.shape({
+    owner: PropTypes.string.isRequired
+  }),
+  repo: PropTypes.object,
+  onClick: PropTypes.func.isRequired
+}
+
 export default connect(
-  (state, { options }) => ({ 
-    repo: _.get(state, `github.repos.${options.owner}.${options.repo}`) 
+  (state, { options }) => ({
+    repo: _.get(state, `github.repos.${options.owner}.${options.repo}`)
   }),
   (dispatch, props) => ({
     onClick: () => {
@@ -47,7 +58,7 @@ export default connect(
         owner,
         repo,
         tree_sha,
-	      recursive: 1
+        recursive: 1
       }))
     }
   })

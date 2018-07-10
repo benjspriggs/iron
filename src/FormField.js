@@ -1,78 +1,31 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
+import { Form } from 'semantic-ui-react'
 
-import {
-  Form,
-  Message,
-  Button,
-} from 'semantic-ui-react'
-
-export const FormField = ({
+const FormField = ({
   id,
   label,
   placeholder,
   handleChange,
   handleBlur,
-  values,
+  values
 }) => (
   <Form.Field>
     <label htmlFor={id}>
-    {label}
+      {label}
     </label>
     <input id={id} placeholder={placeholder} value={values[id]} onChange={handleChange}
-    onBlur={handleBlur}/>
+      onBlur={handleBlur}/>
   </Form.Field>
 )
 
 FormField.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
+  placeholder: PropTypes.string,
+  handleChange: PropTypes.func,
+  handleBlur: PropTypes.func,
+  values: PropTypes.object
 }
 
-export const ResetButton = ({
-  id,
-  handleReset,
-  dirty,
-  isSubmitting
-}) => (
-  <Button
-  id={id}
-  type="button"
-  onClick={handleReset}
-  disabled={!dirty || isSubmitting}
-  >
-  Reset
-  </Button>
-)
-
-export const SubmitButton = ({
-  isSubmitting,
-}) => (
-    <Button type="submit" disabled={isSubmitting}>
-    Submit
-    </Button>
-)
-
-export const ErrorDisplay = ({
-  errors,
-  touched,
-}) => {
-  if (_.isEmpty(errors)) {
-    return null
-  }
-
-  const filteredKeys = Object
-    .keys(errors)
-    .filter(k => touched[k])
-    .reduce((obj, k) => ({ ...obj, [k]: errors[k] }), {})
-
-  if (_.isEmpty(filteredKeys)) {
-    return null
-  } else {
-  return (<Message negative
-          header="Error"
-          list={Object.values(filteredKeys)}
-          />)
-  }
-}
+export default FormField

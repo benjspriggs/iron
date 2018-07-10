@@ -2,21 +2,21 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Container,
-  Header,
+  Header
 } from 'semantic-ui-react'
 
 export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) => (
   <Container>
-      <Header as="h2">
+    <Header as="h2">
       { title }
       <Header.Subheader>
       by { source }, { date }
       </Header.Subheader>
-      </Header>
+    </Header>
 
-      <Container text>
+    <Container text>
       {content}
-      </Container>
+    </Container>
   </Container>
 )
 
@@ -25,7 +25,7 @@ BlogPost.propTypes = {
   source: PropTypes.string.isRequired,
   content: PropTypes.string,
   tags: PropTypes.array,
-  date: PropTypes.string,
+  date: PropTypes.string
 }
 
 export default BlogPost

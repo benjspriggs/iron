@@ -1,8 +1,8 @@
 // Provides epics, etc for translating
 // blobs into posts
-import { from, of } from 'rxjs'
+import 'rxjs'
 import { ajax } from 'rxjs/ajax'
-import { map, mergeMap, catchError } from 'rxjs/operators'
+import { map, mergeMap } from 'rxjs/operators'
 import { createActions, handleActions } from 'redux-actions'
 import { ofType, combineEpics } from 'redux-observable'
 
@@ -10,10 +10,10 @@ export const POST_GET_CONTENT = 'POST_GET_CONTENT'
 export const POST_CONVERT_CONTENT = 'POST_CONVERT_CONTENT'
 export const POST_GET_CONTENT_DONE = 'POST_GET_CONTENT_DONE'
 
-export const { 
+export const {
   postGetContent,
   postConvertContent,
-  postGetContentDone,
+  postGetContentDone
 } = createActions({
   [POST_GET_CONTENT]: ({ name, url }) => ({ name, url }),
   [POST_CONVERT_CONTENT]: ({ name, blob }) => ({ name, blob }),
@@ -24,26 +24,25 @@ export default handleActions({
   [POST_GET_CONTENT_DONE]: (state, action) => {
     const storeKey = action.error ? 'errors' : 'posts'
 
-    return { 
+    return {
       ...state,
-      [storeKey]: [...state[storeKey], action.payload ]
+      [storeKey]: [...state[storeKey], action.payload]
     }
   }
 }, { posts: [] })
 
-
 export const postsEpic = combineEpics(
   action$ => action$.pipe(
-      ofType(POST_GET_CONTENT),
-      mergeMap(action => ajax.getJSON(action.payload.url).pipe(
-        map(response => postConvertContent({ name: action.payload.name, blob: response.blob }))
-      ))
+    ofType(POST_GET_CONTENT),
+    mergeMap(action => ajax.getJSON(action.payload.url).pipe(
+      map(response => postConvertContent({ name: action.payload.name, blob: response.blob }))
+    ))
   ),
   // change blobs to actual posts
   // with the given shape
   // TODO
   action$ => action$.pipe(
     ofType(POST_CONVERT_CONTENT),
-    mergeMap(action => action),
-  ),
+    mergeMap(action => action)
+  )
 )
