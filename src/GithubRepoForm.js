@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 import { withFormik } from 'formik'
 import * as yup from 'yup'
 import {
@@ -17,8 +18,14 @@ import {
 
 const GithubRepoForm = props => {
   const {
-    handleSubmit
+    handleSubmit,
+    githubErrors
   } = props
+
+  const extra = githubErrors ? _.flatten(Object.keys(githubErrors)
+    .map(owner => Object.keys(githubErrors[owner])
+      .reduce((rs, r) => [...rs,
+        `${owner}/${r}: ${JSON.parse(githubErrors[owner][r].error.message).message}`], []))) : []
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -41,17 +48,18 @@ const GithubRepoForm = props => {
       <ResetButton {...props} />
       <SubmitButton {...props} />
 
-      <ErrorDisplay {...props} />
+      <ErrorDisplay {...props} extra={extra} />
     </Form>
   )
 }
 
 GithubRepoForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  githubErrors: PropTypes.object
 }
 
 export default connect(
-  null,
+  state => ({ githubErrors: state.github.errors }),
   dispatch => ({
     repoGetContent: (values) => dispatch(repoGetContent({ ...values, tree_sha: 'master' }))
   })
