@@ -19,7 +19,7 @@ const ResetButton = ({
 )
 
 ResetButton.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   handleReset: PropTypes.func,
   dirty: PropTypes.bool,
   isSubmitting: PropTypes.bool
