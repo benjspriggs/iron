@@ -3,6 +3,8 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createEpicMiddleware } from 'redux-observable'
 import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 import rootReducer, { rootEpic } from './dux'
 
 export const history = createHistory()
@@ -16,6 +18,11 @@ const middleware = [
   epicMiddleware
 ]
 
+const persistConfig = {
+  key: 'root',
+  storage
+}
+
 if (process.env.NODE_ENV !== 'production') {
   const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__
 
@@ -24,17 +31,23 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const connectedReducer = connectRouter(history)(persistedReducer)
+
 const composedEnhancers = compose(
   applyMiddleware(...middleware),
   ...enhancers
 )
 
 const store = createStore(
-  connectRouter(history)(rootReducer),
+  connectedReducer,
   initialState,
   composedEnhancers
 )
 
 epicMiddleware.run(rootEpic)
+
+export const persistor = persistStore(store)
 
 export default store
