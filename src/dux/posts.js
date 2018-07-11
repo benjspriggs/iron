@@ -102,8 +102,13 @@ export const postsEpic = combineEpics(
       }, [[]])
         .filter(post => post.length > 0)
         .map(([header, ...content]) => ({ title: header.text, content: content }))
-        // TODO: add links
-        .map(({ title, content }) => ({ title, content: parser.parse(content) }))
+        // TODO: add source and other meta
+        .map(({ title, content }) => {
+          let withLinks = [...content]
+          withLinks.links = tokens.links
+
+          return ({ title, content: parser.parse(withLinks) })
+        })
         .map(postGetContentDone)
 
       return from(byHeader)

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import renderHTML from 'react-render-html'
 import {
   Container,
   Header
@@ -15,7 +16,7 @@ export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) 
     </Header>
 
     <Container text>
-      {content}
+      {renderHTML(content)}
     </Container>
   </Container>
 )
