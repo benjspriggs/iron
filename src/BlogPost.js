@@ -6,17 +6,17 @@ import {
   Header
 } from 'semantic-ui-react'
 
-export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) => (
+export const BlogPost = ({ title, source, html = false, content = '', tags = [], date = '' }) => (
   <Container>
     <Header as="h2">
       { title }
       <Header.Subheader>
-      by { source }, { date }
+      by { source } { date ? ', ' + date : '' }
       </Header.Subheader>
     </Header>
 
     <Container text>
-      {renderHTML(content)}
+      {html ? renderHTML(content) : content}
     </Container>
   </Container>
 )
@@ -24,6 +24,7 @@ export const BlogPost = ({ title, source, content = '', tags = [], date = '' }) 
 BlogPost.propTypes = {
   title: PropTypes.string.isRequired,
   source: PropTypes.string.isRequired,
+  html: PropTypes.bool,
   content: PropTypes.string,
   tags: PropTypes.array,
   date: PropTypes.string
