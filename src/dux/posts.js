@@ -46,7 +46,9 @@ export const postsEpic = combineEpics(
   action$ => action$.pipe(
     ofType(POST_LOAD_ALL_FROM_REPO),
     mergeMap(action => action.payload.data
+      // only include files or directories
       .filter(d => ['file', 'dir'].includes(d.type))
+      // only use markdown
       .filter(d => d.name.split('.').pop() === 'md')
       .map(d => {
         switch (d.type) {
@@ -74,6 +76,6 @@ export const postsEpic = combineEpics(
 
   action$ => action$.pipe(
     ofType(POST_CONVERT_CONTENT),
-    map(({ payload: content }) => postConvertContentDone(decode(content)))
+    map(({ payload: { content } }) => postConvertContentDone(decode(content)))
   )
 )
