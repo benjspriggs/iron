@@ -29,7 +29,7 @@ const RepositoryView = ({ options, repo, onClick }) => (
     <Header as="h3">{ options.owner }</Header>
     <Button onClick={onClick}>Refresh</Button>
     <List>
-      { repo === undefined ? 'No repo' : repo.data.tree.map(DataItem) }
+      { repo === undefined ? 'No repo' : repo.data.map(DataItem) }
     </List>
   </Container>
 )

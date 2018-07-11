@@ -53,7 +53,7 @@ GithubRepoForm.propTypes = {
 export default connect(
   null,
   dispatch => ({
-    repoGetContent: (values) => dispatch(repoGetContent({ ...values, tree_sha: 'master' }))
+    repoGetContent: (values) => dispatch(repoGetContent({ ...values, path: '' }))
   })
 )(withFormik({
   displayName: 'GithubRepoForm',

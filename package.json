@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"@octokit/rest": "^15.9.4",
+		"base-64": "^0.1.0",
 		"connected-react-router": "^4.3.0",
 		"formik": "^0.11.11",
 		"history": "^4.7.2",

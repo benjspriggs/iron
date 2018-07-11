@@ -11,7 +11,7 @@ const GithubErrorsDisplay = ({ githubErrors }) => {
   const extra = githubErrors ? _.flatten(Object.keys(githubErrors)
     .map(owner => Object.keys(githubErrors[owner])
       .reduce((rs, r) => [...rs,
-        `${owner}/${r}: ${JSON.parse(githubErrors[owner][r].error.message).message}`], []))) : []
+        `${owner}/${r}: ${githubErrors[owner][r].error.message}`], []))) : []
 
   return (
     <List>

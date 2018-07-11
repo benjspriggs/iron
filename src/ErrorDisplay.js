@@ -16,12 +16,14 @@ const ErrorDisplay = ({
     .filter(k => touched[k])
     .reduce((obj, k) => ({ ...obj, [k]: errors[k] }), {})
 
+  const list = _.isEmpty(filteredKeys) ? [] : Object.values(filteredKeys).concat(extra)
+
   if (_.isEmpty(filteredKeys)) {
     return null
   } else {
     return (<Message negative
       header="Error"
-      list={[...Object.values(filteredKeys), ...extra]}
+      list={list}
     />)
   }
 }
