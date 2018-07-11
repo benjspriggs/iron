@@ -1,11 +1,13 @@
 import { from, of } from 'rxjs'
 import { mergeMap, catchError } from 'rxjs/operators'
+import _ from 'lodash'
 import Octokit from '@octokit/rest'
 import { createActions, handleActions } from 'redux-actions'
 import { ofType, combineEpics } from 'redux-observable'
 
 export const REPO_GET_CONTENT = 'REPO_GET_CONTENT'
 export const REPO_GET_CONTENT_DONE = 'REPO_GET_CONTENT_DONE'
+export const AS_LIST_KEY = 'list'
 export const octokit = Octokit()
 
 export const {
@@ -15,7 +17,6 @@ export const {
 })
 
 export default handleActions({
-  REPO_GET_CONTENT: (state) => ({ ...state, clicked: true }),
   REPO_GET_CONTENT_DONE: (state, action) => {
     const {
       options: {
@@ -24,14 +25,14 @@ export default handleActions({
       }
     } = action.payload
 
-    const otherRepos = state.repos[owner] || []
-
     const storeKey = action.error ? 'errors' : 'repos'
+    const otherStored = _.get(state, storeKey, {})
+    const otherRepos = _.get(otherStored, owner, {})
 
     return {
       ...state,
       [storeKey]: {
-        ...state.repos,
+        ...otherStored,
         [owner]: {
           ...otherRepos,
           [repo]: action.payload
