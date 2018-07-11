@@ -2,7 +2,7 @@
 // blobs into posts
 import { from } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
-import { tap, map, mergeMap } from 'rxjs/operators'
+import { filter, map, mergeMap } from 'rxjs/operators'
 import { createActions, handleActions } from 'redux-actions'
 import { ofType, combineEpics } from 'redux-observable'
 import marked from 'marked'
@@ -49,6 +49,22 @@ export default handleActions({
   }
 }, { posts: [] })
 
+export const parsePostsFromTextBody = (meta, body) => body.split('\n')
+  .reduce(([latestPost, ...allButLatest], line) => {
+    if (line.match(/^\/\//)) {
+      return [[line], latestPost, ...allButLatest]
+    } else {
+      return [[...latestPost, line], ...allButLatest]
+    }
+  }, [[]])
+  .filter(post => post.length)
+  .map(([firstLine, ...rest]) => ({
+    // TODO: pull from actual owner when we have that info
+    source: meta.owner,
+    title: firstLine,
+    content: rest.map(r => `<p>${r}</p>`).join('')
+  }))
+
 export const postsEpic = combineEpics(
   // postLoadAllFromRepo -> postGetContent
   action$ => action$.pipe(
@@ -56,8 +72,9 @@ export const postsEpic = combineEpics(
     mergeMap(action => action.payload.data
       // only include files or directories
       .filter(d => ['file', 'dir'].includes(d.type))
-      // only use markdown
-      .filter(d => d.name.split('.').pop() === 'md')
+      .map(d => ({...d, extension: d.name.split('.').pop()}))
+      // only use markdown or text files
+      .filter(d => ['md', 'txt'].includes(d.extension))
       .map(d => {
         switch (d.type) {
           case 'file':
@@ -92,7 +109,6 @@ export const postsEpic = combineEpics(
   // TODO: link repo date with actual date
   action$ => action$.pipe(
     ofType(POST_GET_CONTENT_DATE),
-    tap(console.dir),
     mergeMap(action => from(octokit.repos.getCommit({
       owner: action.payload.meta.owner,
       repo: action.payload.meta.repo,
@@ -106,9 +122,10 @@ export const postsEpic = combineEpics(
     )
   ),
 
-  // postConvertContentDone -> postGetContentDone
+  // postConvertContentDone -> postGetContentDone (md)
   action$ => action$.pipe(
     ofType(POST_CONVERT_CONTENT_DONE),
+    filter(action => action.payload.meta.extension === 'md'),
     mergeMap(action => {
       const tokens = lexer.lex(action.payload.content)
       const {
@@ -136,5 +153,19 @@ export const postsEpic = combineEpics(
 
       return from(byHeader)
     })
+  ),
+
+  // postConvertContentDone -> postGetContentDone (txt)
+  action$ => action$.pipe(
+    ofType(POST_CONVERT_CONTENT_DONE),
+    filter(action => action.payload.meta.extension === 'txt'),
+    mergeMap(action => from(parsePostsFromTextBody(
+      action.payload.meta,
+      action.payload.content)
+    )
+      .pipe(
+        map(post => ({ html: true, ...post })),
+        map(postGetContentDone)
+      ))
   )
 )
