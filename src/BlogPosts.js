@@ -1,6 +1,7 @@
 import React from 'react'
 import BlogPost from './BlogPost'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import {
   List
@@ -16,4 +17,6 @@ BlogPosts.propTypes = {
   posts: PropTypes.array
 }
 
-export default BlogPosts
+export default connect(
+  state => ({ posts: state.posts.posts })
+)(BlogPosts)
