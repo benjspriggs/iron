@@ -41,9 +41,7 @@
     "eject": "react-scripts eject",
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
-    "prepush": "pretty-quick",
-    "lint": "eslint src",
-    "lint-fix": "eslint --fix src"
+    "prepush": "pretty-quick"
   },
   "license": "MIT",
   "repository": {
@@ -60,11 +58,5 @@
     "pretty-quick": "^1.6.0",
     "react-generate-props": "^0.3.0",
     "redux-devtools-extension": "^2.13.5"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
   }
 }
