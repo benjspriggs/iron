@@ -5,13 +5,16 @@ import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import reduxReset from 'redux-reset'
 import rootReducer, { rootEpic } from './dux'
 
 export const history = createHistory()
 export const epicMiddleware = createEpicMiddleware()
 
 const initialState = {}
-const enhancers = []
+const enhancers = [
+  reduxReset()
+]
 const middleware = [
   thunk,
   routerMiddleware(history),
