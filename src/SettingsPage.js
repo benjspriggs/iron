@@ -1,12 +1,13 @@
 import React from 'react'
-import SimpleGithubRepoForm from './SimpleGithubRepoForm'
-import GithubRepoForm from './GithubRepoForm'
-import CurrentRepos from './CurrentRepos'
-import GithubErrorsDisplay from './GithubErrorsDisplay'
 import {
   Container,
   Header
 } from 'semantic-ui-react'
+
+import SimpleGithubRepoForm from './SimpleGithubRepoForm'
+import GithubRepoForm from './GithubRepoForm'
+import CurrentRepos from './CurrentRepos'
+import GithubErrorsDisplay from './GithubErrorsDisplay'
 
 const SettingsPage = () => (
   <Container>
