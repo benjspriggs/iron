@@ -4,7 +4,14 @@ import PostsPage from './PostsPage'
 import SettingsPage from './SettingsPage'
 import NoMatch from './NoMatch'
 import ViewPage from './ViewPage'
-import { Container, Header, Menu, Image, Segment } from 'semantic-ui-react'
+import {
+  Container,
+  Header,
+  Menu,
+  Image,
+  Segment,
+  Divider
+} from 'semantic-ui-react'
 import { Route, Switch } from 'react-router'
 import { Link } from 'react-router-dom'
 import './App.css'
@@ -23,14 +30,13 @@ class App extends Component {
             <Menu.Item as={Link} to="/">
       Home
             </Menu.Item>
-            <Menu.Item as={Link} to="/view">
-      View
-            </Menu.Item>
             <Menu.Item as={Link} to="/settings">
       Settings
             </Menu.Item>
           </Menu>
         </Segment>
+
+        <Divider hidden />
 
         <Container>
           <Switch>
