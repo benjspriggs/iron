@@ -8,7 +8,7 @@ const FormField = ({
   placeholder,
   handleChange,
   handleBlur,
-  values
+  values = {},
 }) => (
   <Form.Field>
     <label htmlFor={id}>
@@ -21,7 +21,7 @@ const FormField = ({
 
 FormField.propTypes = {
   id: PropTypes.string.isRequired,
-  label: PropTypes.string,
+  label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   handleChange: PropTypes.func,
   handleBlur: PropTypes.func,
