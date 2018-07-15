@@ -9,8 +9,8 @@ import {
 
 import { postLoadAllFromRepo } from './dux/posts'
 
-const RepoItem = ({ owner, repo, key, data, postLoadAllFromRepo }) => (
-  <List.Item key={key}>
+const RepoItem = ({ owner, repo, id, data, postLoadAllFromRepo }) => (
+  <List.Item key={id}>
     <List.Icon name="github"/>
     <List.Content>
       <List.Description>
@@ -26,21 +26,21 @@ const RepoItem = ({ owner, repo, key, data, postLoadAllFromRepo }) => (
 RepoItem.propTypes = {
   owner: PropTypes.string,
   repo: PropTypes.string,
-  key: PropTypes.any,
+  id: PropTypes.any,
   data: PropTypes.array,
   postLoadAllFromRepo: PropTypes.func.isRequired
 }
 
-const ReposForOwner = ({ owner, repos, key, postLoadAllFromRepo }) => (
-  <List.Item key={key}>
+const ReposForOwner = ({ owner, repos, id, postLoadAllFromRepo }) => (
+  <List.Item key={id}>
     <List.Icon name="user" />
     <List.Content>
       <List.Header>{owner}</List.Header>
       <List.List>
         { Object.keys(repos[owner])
-          .map((repo, key) =>
+          .map((repo, repoItemId) =>
             <RepoItem
-              key={key}
+              key={repoItemId}
               owner={owner}
               repo={repo}
               data={repos[owner][repo].data}
@@ -55,7 +55,7 @@ const ReposForOwner = ({ owner, repos, key, postLoadAllFromRepo }) => (
 ReposForOwner.propTypes = {
   owner: PropTypes.string,
   repos: PropTypes.object,
-  key: PropTypes.number,
+  id: PropTypes.number,
   postLoadAllFromRepo: PropTypes.func.isRequired
 }
 
@@ -64,7 +64,7 @@ export default connect(
   dispatch => ({ postLoadAllFromRepo: val => dispatch(postLoadAllFromRepo(val)) })
 )(props => {
   const items = Object.keys(props.repos)
-    .map((owner, ckey) => <ReposForOwner postLoadAllFromRepo={props.postLoadAllFromRepo} key={ckey} owner={owner} repos={props.repos} />)
+    .map((owner, repoId) => <ReposForOwner postLoadAllFromRepo={props.postLoadAllFromRepo} key={repoId} owner={owner} repos={props.repos} />)
 
   return (<Container>
     <List>
