@@ -18,5 +18,5 @@ BlogPosts.propTypes = {
 }
 
 export default connect(
-  state => ({ posts: state.posts.posts })
+  state => ({ posts: Object.values(state.posts.posts) })
 )(BlogPosts)

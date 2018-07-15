@@ -8,6 +8,7 @@ import { ofType, combineEpics } from 'redux-observable'
 import marked from 'marked'
 import { decode } from 'base-64'
 import _ from 'lodash'
+import md5 from 'md5'
 
 import { octokit } from './github'
 
@@ -40,14 +41,21 @@ export const {
 export default handleActions({
   [POST_GET_CONTENT_DONE]: (state, action) => {
     const storeKey = action.error ? 'errors' : 'posts'
-    const existingPosts = _.get(state, storeKey, [])
+
+    const existingPosts = _.get(state, storeKey, {})
+
+    const postKey = md5(JSON.stringify(action.payload))
+
+    if (existingPosts[postKey]) {
+      return state
+    }
 
     return {
       ...state,
-      [storeKey]: existingPosts.concat(action.payload)
+      [storeKey]: {...existingPosts, [postKey]: action.payload}
     }
   }
-}, { posts: [] })
+}, { posts: {}, errors: {} })
 
 export const parsePostsFromTextBody = (meta, body) => body.split('\n')
   .reduce(([latestPost, ...allButLatest], line) => {
