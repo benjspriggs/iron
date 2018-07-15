@@ -1,21 +1,16 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import _ from 'lodash'
+import React from "react"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
+import _ from "lodash"
 
-import {
-  Container,
-  List,
-  Button,
-  Header
-} from 'semantic-ui-react'
+import { Container, List, Button, Header } from "semantic-ui-react"
 
-import { repoGetContent } from './dux/github'
+import { repoGetContent } from "./dux/github"
 
 const DataItem = (item, idx) => (
   <List.Item key={idx} href={item.url}>
     <List.Content>
-      <List.Icon name={item.type === 'dir' ? 'folder' : item.type } />
+      <List.Icon name={item.type === "dir" ? "folder" : item.type} />
       <List.Header>
         <List.Description>{item.path}</List.Description>
       </List.Header>
@@ -26,11 +21,9 @@ const DataItem = (item, idx) => (
 
 const RepositoryView = ({ options, repo, onClick }) => (
   <Container>
-    <Header as="h3">{ options.owner }</Header>
+    <Header as="h3">{options.owner}</Header>
     <Button onClick={onClick}>Refresh</Button>
-    <List>
-      { repo === undefined ? 'No repo' : repo.data.map(DataItem) }
-    </List>
+    <List>{repo === undefined ? "No repo" : repo.data.map(DataItem)}</List>
   </Container>
 )
 
@@ -48,18 +41,17 @@ export default connect(
   }),
   (dispatch, props) => ({
     onClick: () => {
-      const {
-        owner = 'benjspriggs',
-        repo = 'iron',
-        tree_sha = ''
-      } = props.options || {}
+      const { owner = "benjspriggs", repo = "iron", tree_sha = "" } =
+        props.options || {}
 
-      dispatch(repoGetContent({
-        owner,
-        repo,
-        tree_sha,
-        recursive: 1
-      }))
+      dispatch(
+        repoGetContent({
+          owner,
+          repo,
+          tree_sha,
+          recursive: 1
+        })
+      )
     }
   })
 )(RepositoryView)

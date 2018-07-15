@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import logo from './logo.svg'
-import PostsPage from './PostsPage'
-import SettingsPage from './SettingsPage'
-import NoMatch from './NoMatch'
-import ViewPage from './ViewPage'
+import React, { Component } from "react"
+import logo from "./logo.svg"
+import PostsPage from "./PostsPage"
+import SettingsPage from "./SettingsPage"
+import NoMatch from "./NoMatch"
+import ViewPage from "./ViewPage"
 import {
   Container,
   Header,
@@ -11,27 +11,27 @@ import {
   Image,
   Segment,
   Divider
-} from 'semantic-ui-react'
-import { Route, Switch } from 'react-router'
-import { Link } from 'react-router-dom'
-import './App.css'
+} from "semantic-ui-react"
+import { Route, Switch } from "react-router"
+import { Link } from "react-router-dom"
+import "./App.css"
 
 class App extends Component {
-  render () {
+  render() {
     return (
       <Container>
         <Header as="h1" attached="top">
           <Image src={logo} className="App-logo" alt="logo" />
-      iron
+          iron
         </Header>
 
         <Segment attached>
           <Menu>
             <Menu.Item as={Link} to="/">
-      Home
+              Home
             </Menu.Item>
             <Menu.Item as={Link} to="/settings">
-      Settings
+              Settings
             </Menu.Item>
           </Menu>
         </Segment>

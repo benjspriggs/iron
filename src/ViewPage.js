@@ -1,30 +1,27 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Route, Switch } from 'react-router'
-import { connect } from 'react-redux'
+import React from "react"
+import PropTypes from "prop-types"
+import { Route, Switch } from "react-router"
+import { connect } from "react-redux"
 
-import BlogPost from './BlogPost'
-import NoMatch from './NoMatch'
+import BlogPost from "./BlogPost"
+import NoMatch from "./NoMatch"
 
-const BlogPostFromId = connect(
-  state => ({ posts: state.posts.posts })
-)(props => {
-  const {
-    match: {
-      params: {
-        postId
+const BlogPostFromId = connect(state => ({ posts: state.posts.posts }))(
+  props => {
+    const {
+      match: {
+        params: { postId }
       }
+    } = props
+
+    const post = props.posts[postId]
+
+    if (post) {
+      return <BlogPost id={postId} {...post} />
+    } else {
+      return <NoMatch />
     }
-  } = props
-
-  const post = props.posts[postId]
-
-  if (post) {
-    return (<BlogPost id={postId} {...post} />)
-  } else {
-    return (<NoMatch />)
   }
-}
 )
 
 BlogPostFromId.propTypes = {

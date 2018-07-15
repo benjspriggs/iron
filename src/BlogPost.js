@@ -1,23 +1,25 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import renderHTML from 'react-render-html'
-import {
-  Container,
-  Header,
-} from 'semantic-ui-react'
+import React from "react"
+import PropTypes from "prop-types"
+import renderHTML from "react-render-html"
+import { Container, Header } from "semantic-ui-react"
 
-export const BlogPost = ({ title, source, html = false, content = '', tags = [], date = '' }) => (
+export const BlogPost = ({
+  title,
+  source,
+  html = false,
+  content = "",
+  tags = [],
+  date = ""
+}) => (
   <Container>
     <Header as="h2">
-      { title }
+      {title}
       <Header.Subheader>
-      by { source } { date ? ', ' + date : '' }
+        by {source} {date ? ", " + date : ""}
       </Header.Subheader>
     </Header>
 
-    <Container text>
-      {html ? renderHTML(content) : content}
-    </Container>
+    <Container text>{html ? renderHTML(content) : content}</Container>
   </Container>
 )
 

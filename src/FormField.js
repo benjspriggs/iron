@@ -1,6 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Form } from 'semantic-ui-react'
+import React from "react"
+import PropTypes from "prop-types"
+import { Form } from "semantic-ui-react"
 
 const FormField = ({
   id,
@@ -8,14 +8,17 @@ const FormField = ({
   placeholder,
   handleChange,
   handleBlur,
-  values = {},
+  values = {}
 }) => (
   <Form.Field>
-    <label htmlFor={id}>
-      {label}
-    </label>
-    <input id={id} placeholder={placeholder} value={values[id]} onChange={handleChange}
-      onBlur={handleBlur}/>
+    <label htmlFor={id}>{label}</label>
+    <input
+      id={id}
+      placeholder={placeholder}
+      value={values[id]}
+      onChange={handleChange}
+      onBlur={handleBlur}
+    />
   </Form.Field>
 )
 

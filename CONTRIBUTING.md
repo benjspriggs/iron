@@ -6,5 +6,5 @@ Use the Github project tracker (<https://github.com/benjspriggs/iron/issues>) to
 
 ## Adding features/ fixing bugs
 
-Use the Github pull request feature (<https://github.com/benjspriggs/iron/pulls>) with your new fancy thing, 
+Use the Github pull request feature (<https://github.com/benjspriggs/iron/pulls>) with your new fancy thing,
 and wait for feedback!
