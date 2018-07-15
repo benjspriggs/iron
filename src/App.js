@@ -23,6 +23,9 @@ class App extends Component {
             <Menu.Item as={Link} to="/">
       Home
             </Menu.Item>
+            <Menu.Item as={Link} to="/view">
+      View
+            </Menu.Item>
             <Menu.Item as={Link} to="/settings">
       Settings
             </Menu.Item>

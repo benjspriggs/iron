@@ -1,12 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  Container
-} from 'semantic-ui-react'
 import { Route, Switch } from 'react-router'
 import { connect } from 'react-redux'
 
 import BlogPost from './BlogPost'
+import PostsPage from './PostsPage'
 import NoMatch from './NoMatch'
 
 const BlogPostFromId = connect(
@@ -40,7 +38,7 @@ BlogPostFromId.propTypes = {
 
 const ViewPage = props => (
   <Switch>
-    <Route exact path="/view" component={() => (<Container>Root</Container>)} />
+    <Route exact path="/view" component={PostsPage} />
     <Route path="/view/:postId" component={BlogPostFromId} />
   </Switch>
 )
