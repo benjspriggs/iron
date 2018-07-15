@@ -56,7 +56,7 @@ export default connect(
   displayName: 'GithubRepoForm',
   mapPropsToValues: () => ({ uri: '' }),
   validationSchema: yup.object().shape({
-    uri: yup.string().required()
+    uri: yup.string().matches(/\S+\/\S+/).required()
   }),
   handleSubmit: (values, { props: { repoGetContent }, setSubmitting }) => {
     setSubmitting(true)
