@@ -8,8 +8,8 @@ import {
 } from 'semantic-ui-react'
 
 const BlogPosts = ({ posts }) => (
-  <List>
-    { posts.map((p, idx) => <BlogPost {...p} key={idx} />) }
+  <List relaxed divided>
+    { posts.map((p, idx) => <List.Item key={idx}><BlogPost {...p} /></List.Item>) }
   </List>
 )
 
@@ -18,5 +18,5 @@ BlogPosts.propTypes = {
 }
 
 export default connect(
-  state => ({ posts: Object.values(state.posts.posts) })
+  state => ({ posts: Object.keys(state.posts.posts).map(k => ({ id: k, ...state.posts.posts[k] })) })
 )(BlogPosts)

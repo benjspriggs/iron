@@ -3,6 +3,7 @@ import logo from './logo.svg'
 import PostsPage from './PostsPage'
 import SettingsPage from './SettingsPage'
 import NoMatch from './NoMatch'
+import ViewPage from './ViewPage'
 import { Container, Header, Menu, Image, Segment } from 'semantic-ui-react'
 import { Route, Switch } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -32,6 +33,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={PostsPage} />
             <Route exact path="/settings" component={SettingsPage} />
+            <Route path="/view" component={ViewPage} />
             <Route component={NoMatch} />
           </Switch>
         </Container>
