@@ -11,12 +11,15 @@ export const AS_LIST_KEY = 'list'
 export const octokit = Octokit()
 
 export const {
-  repoGetContent
+  repoGetContent,
+  clearGithubErrors
 } = createActions({
-  [REPO_GET_CONTENT]: options => ({ ...options })
+  [REPO_GET_CONTENT]: options => ({ ...options }),
+  CLEAR_GITHUB_ERRORS: null
 })
 
 export default handleActions({
+  [clearGithubErrors]: state => ({ ...state, errors: {} }),
   REPO_GET_CONTENT_DONE: (state, action) => {
     const {
       options: {
