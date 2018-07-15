@@ -51,10 +51,14 @@
 		"url": "git://github.com/benjspriggs/iron.git"
 	},
 	"devDependencies": {
+		"babel-eslint": "^7.2.3",
 		"enzyme": "^3.3.0",
-		"eslint": "^5.1.0",
+		"eslint": "^4.19.1",
+		"eslint-config-react-app": "^2.1.0",
 		"eslint-config-standard": "^11.0.0",
+		"eslint-plugin-flowtype": "^2.50.0",
 		"eslint-plugin-import": "^2.13.0",
+		"eslint-plugin-jsx-a11y": "^5.1.1",
 		"eslint-plugin-node": "^6.0.1",
 		"eslint-plugin-promise": "^3.8.0",
 		"eslint-plugin-react": "^7.10.0",
