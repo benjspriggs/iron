@@ -14,7 +14,7 @@ const SettingsPage = () => (
     <GithubRepoForm />
     <Header as="h3">Errors</Header>
     <GithubErrorsDisplay />
-    <Header as="h3">Repos.</Header>
+    <Header as="h3">Repos</Header>
     <CurrentRepos />
   </Container>
 )
