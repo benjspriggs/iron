@@ -1,19 +1,30 @@
 import React from 'react'
+import SimpleGithubRepoForm from './SimpleGithubRepoForm'
 import GithubRepoForm from './GithubRepoForm'
 import CurrentRepos from './CurrentRepos'
 import GithubErrorsDisplay from './GithubErrorsDisplay'
 import {
-  Container
+  Container,
+  Header
 } from 'semantic-ui-react'
 
 const SettingsPage = () => (
   <Container>
-  The settings page.
-  Form.
+    <Header as="h2">
+  Settings
+    </Header>
+    <Header as="h3">
+  Form
+    </Header>
+    <SimpleGithubRepoForm />
     <GithubRepoForm />
-  Errors.
+    <Header as="h3">
+  Errors
+    </Header>
     <GithubErrorsDisplay />
+    <Header as="h3">
   Repos.
+    </Header>
     <CurrentRepos />
   </Container>
 )

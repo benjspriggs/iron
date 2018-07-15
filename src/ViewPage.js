@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router'
 import { connect } from 'react-redux'
 
 import BlogPost from './BlogPost'
-import PostsPage from './PostsPage'
 import NoMatch from './NoMatch'
 
 const BlogPostFromId = connect(
@@ -38,7 +37,7 @@ BlogPostFromId.propTypes = {
 
 const ViewPage = props => (
   <Switch>
-    <Route exact path="/view" component={PostsPage} />
+    <Route exact path="/view" component={NoMatch} />
     <Route path="/view/:postId" component={BlogPostFromId} />
   </Switch>
 )
