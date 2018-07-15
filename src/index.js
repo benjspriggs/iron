@@ -9,6 +9,7 @@ import store, { history, persistor } from './store'
 import { PersistGate } from 'redux-persist/integration/react'
 import RefreshState from './RefreshState'
 
+import { Divider } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 
 const target = document.getElementById('root')
@@ -19,6 +20,7 @@ render(
       <ConnectedRouter history={history}>
         <div>
           <App />
+          <Divider />
           <RefreshState persistor={persistor}/>
         </div>
       </ConnectedRouter>
