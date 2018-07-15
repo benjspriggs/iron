@@ -8,20 +8,18 @@ import GithubErrorsDisplay from "./GithubErrorsDisplay"
 
 const SettingsPage = () => (
   <Container>
-    <Header as="h2">Settings</Header>
-    <Header as="h3">Form</Header>
-    <Header as="h4">Simple Form</Header>
+    <Header as="h2">Form</Header>
+    <Header as="h3">Simple Form</Header>
     <SimpleGithubRepoForm />
     <Divider />
-    <Header as="h4">Full Form</Header>
+    <Header as="h3">Full Form</Header>
     <GithubRepoForm />
     <Divider section />
-    <Header as="h3">Repos</Header>
+    <Header as="h2">Repos</Header>
     <CurrentRepos />
     <Divider section />
-    <Header as="h3">Errors</Header>
+    <Header as="h2">Errors</Header>
     <GithubErrorsDisplay />
-    <Divider section />
   </Container>
 )
 
