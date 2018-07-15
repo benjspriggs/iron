@@ -1,7 +1,6 @@
 import React from "react"
 import BlogPosts from "./BlogPosts"
 import { Container } from "semantic-ui-react"
-import _ from "lodash"
 
 import { connect } from "react-redux"
 
