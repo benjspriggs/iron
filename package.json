@@ -10,6 +10,7 @@
 		"@octokit/rest": "^15.9.4",
 		"base-64": "^0.1.0",
 		"connected-react-router": "^4.3.0",
+		"enzyme-adapter-react-16": "^1.1.1",
 		"formik": "^0.11.11",
 		"history": "^4.7.2",
 		"marked": "^0.4.0",
@@ -21,6 +22,7 @@
 		"react-render-html": "^0.6.0",
 		"react-router-dom": "^4.3.1",
 		"react-scripts": "1.1.4",
+		"react-test-renderer": "^16.4.1",
 		"redux": "^4.0.0",
 		"redux-actions": "^2.4.0",
 		"redux-observable": "^1.0.0",
@@ -49,7 +51,7 @@
 		"url": "git://github.com/benjspriggs/iron.git"
 	},
 	"devDependencies": {
-		"lorem-ipsum": "^1.0.5",
+		"enzyme": "^3.3.0",
 		"eslint": "^5.1.0",
 		"eslint-config-standard": "^11.0.0",
 		"eslint-plugin-import": "^2.13.0",
@@ -59,6 +61,7 @@
 		"eslint-plugin-standard": "^3.1.0",
 		"husky": "^0.14.3",
 		"lint-staged": "^7.2.0",
+		"lorem-ipsum": "^1.0.5",
 		"redux-devtools-extension": "^2.13.5"
 	},
 	"lint-staged": {
