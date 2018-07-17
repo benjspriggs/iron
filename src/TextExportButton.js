@@ -11,7 +11,7 @@ const formatPostForTextExport = post =>
 
 const TextExportButton = props => (
   <Download
-    file="text.txt"
+    file="posts.txt"
     content={props.posts.map(formatPostForTextExport).join("")}
   >
     <Button type="button">Click to download</Button>
