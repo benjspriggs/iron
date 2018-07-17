@@ -1,8 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Button } from "semantic-ui-react"
+import { Container, Button } from "semantic-ui-react"
 import Download from "@axetroy/react-download"
 import { connect } from "react-redux"
+
 import { postType } from "./BlogPost"
 
 const formatPostForTextExport = post =>
@@ -11,12 +12,19 @@ const formatPostForTextExport = post =>
   }\n\n`
 
 const TextExportButton = props => (
-  <Download
-    file="posts.txt"
-    content={props.posts.map(formatPostForTextExport).join("")}
-  >
-    <Button type="button">Click to download</Button>
-  </Download>
+  <Container>
+    <Button.Group>
+      <Download
+        file="posts.txt"
+        content={props.posts.map(formatPostForTextExport).join("")}
+      >
+        <Button type="button">.txt</Button>
+      </Download>
+      <Download file="posts.json" content={JSON.stringify(props.posts)}>
+        <Button type="button">.json</Button>
+      </Download>
+    </Button.Group>
+  </Container>
 )
 
 TextExportButton.propTypes = {
