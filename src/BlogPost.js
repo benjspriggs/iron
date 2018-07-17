@@ -3,14 +3,7 @@ import PropTypes from "prop-types"
 import renderHTML from "react-render-html"
 import { Container, Header } from "semantic-ui-react"
 
-export const BlogPost = ({
-  title,
-  source,
-  html = false,
-  content = "",
-  tags = [],
-  date = ""
-}) => (
+export const BlogPost = ({ title, source, html, content, tags, date, url }) => (
   <Container>
     <Header as="h2">
       {title}
@@ -19,17 +12,22 @@ export const BlogPost = ({
       </Header.Subheader>
     </Header>
 
-    <Container text>{html ? renderHTML(html) : content.join(<br />)}</Container>
+    <Container text>
+      {html ? renderHTML(html) : content ? content.join(<br />) : ""}
+    </Container>
   </Container>
 )
 
-BlogPost.propTypes = {
+export const postType = {
   title: PropTypes.string.isRequired,
   source: PropTypes.string.isRequired,
   html: PropTypes.string,
   content: PropTypes.arrayOf(PropTypes.string),
   tags: PropTypes.array,
-  date: PropTypes.string
+  date: PropTypes.string,
+  url: PropTypes.string
 }
+
+BlogPost.propTypes = postType
 
 export default BlogPost
