@@ -18,7 +18,8 @@ describe(BlogPost.DisplayName, () => {
     const p = fakeProps(BlogPost, { optional: true })
 
     const mount = render(<BlogPost {...p} />)
+    const content = p.content ? p.content.join("") : ""
 
-    expect(mount.text()).toEqual(expect.stringContaining(p.content))
+    expect(mount.text()).toEqual(expect.stringContaining(content))
   })
 })
