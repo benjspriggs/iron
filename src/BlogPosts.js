@@ -16,7 +16,6 @@ const EnhancedBlogPost = (post, id) => (
     </Button>
     {post.url ? (
       <Button
-        attached="right"
         href={post.url}
         icon="external alternate"
         labelPosition="left"
