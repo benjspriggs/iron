@@ -81,7 +81,8 @@ export const parsePostsFromTextBody = ({ meta, _links, content }) =>
       source: meta.owner,
       url: _links.html,
       title: firstLine,
-      content: rest.map(r => `<p>${r}</p>`).join("")
+      content: [...rest],
+      html: rest.map(r => `<p>${r}</p>`).join("")
     }))
 
 export const postsEpic = combineEpics(
@@ -196,8 +197,8 @@ export const postsEpic = combineEpics(
 
             return {
               title,
-              html: true,
-              content: parser.parse(withLinks),
+              content: content.join,
+              html: parser.parse(withLinks),
               ...rest
             }
           })
@@ -214,7 +215,6 @@ export const postsEpic = combineEpics(
       filter(action => action.payload.meta.extension === "txt"),
       mergeMap(action =>
         from(parsePostsFromTextBody(action.payload)).pipe(
-          map(post => ({ html: true, ...post })),
           map(postGetContentDone)
         )
       )

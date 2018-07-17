@@ -19,15 +19,15 @@ export const BlogPost = ({
       </Header.Subheader>
     </Header>
 
-    <Container text>{html ? renderHTML(content) : content}</Container>
+    <Container text>{html ? renderHTML(html) : content.join(<br />)}</Container>
   </Container>
 )
 
 BlogPost.propTypes = {
   title: PropTypes.string.isRequired,
   source: PropTypes.string.isRequired,
-  html: PropTypes.bool,
-  content: PropTypes.string,
+  html: PropTypes.string,
+  content: PropTypes.arrayOf(PropTypes.string),
   tags: PropTypes.array,
   date: PropTypes.string
 }
