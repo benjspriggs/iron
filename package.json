@@ -1,33 +1,63 @@
 {
-	"name": "iron",
-	"version": "0.1.0",
-	"private": true,
-	"engines": {
-		"node": "10.x.x",
-		"npm": "6.1.0"
-	},
-	"dependencies": {
-		"connected-react-router": "^4.3.0",
-		"history": "^4.7.2",
-		"react": "^16.4.1",
-		"react-dom": "^16.4.1",
-		"react-redux": "^5.0.7",
-		"react-scripts": "1.1.4",
-		"redux": "^4.0.0",
-		"redux-thunk": "^2.3.0"
-	},
-	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject"
-	},
-	"license": "MIT",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/benjspriggs/iron.git"
-	},
-	"devDependencies": {
-		"redux-devtools-extension": "^2.13.5"
-	}
+  "name": "iron",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "10.x.x",
+    "npm": "6.1.0"
+  },
+  "dependencies": {
+    "@axetroy/react-download": "^1.1.1",
+    "@octokit/rest": "^15.9.4",
+    "base-64": "^0.1.0",
+    "connected-react-router": "^4.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "formik": "^0.11.11",
+    "history": "^4.7.2",
+    "marked": "^0.4.0",
+    "md5": "^2.2.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-lazy-load": "^3.0.13",
+    "react-redux": "^5.0.7",
+    "react-render-html": "^0.6.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "react-test-renderer": "^16.4.1",
+    "redux": "^4.0.0",
+    "redux-actions": "^2.4.0",
+    "redux-observable": "^1.0.0",
+    "redux-persist": "^5.10.0",
+    "redux-reset": "^0.3.0",
+    "redux-thunk": "^2.3.0",
+    "rxjs": "^6.2.1",
+    "semantic-ui-css": "^2.3.2",
+    "semantic-ui-react": "^0.81.3",
+    "yup": "^0.25.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "test:ci": "CI=true npm test",
+    "precommit": "pretty-quick --staged",
+    "prepush": "pretty-quick"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjspriggs/iron.git"
+  },
+  "devDependencies": {
+    "enzyme": "^3.3.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "husky": "^0.14.3",
+    "lorem-ipsum": "^1.0.5",
+    "prettier": "^1.13.7",
+    "pretty-quick": "^1.6.0",
+    "react-generate-props": "^0.3.0",
+    "redux-devtools-extension": "^2.13.5"
+  }
 }
