@@ -18,9 +18,6 @@ const SettingsPage = () => (
         <Header as="h3">Full Form</Header>
         <GithubRepoForm />
       </Grid.Column>
-      <Grid.Column>
-        <GithubErrorsDisplay />
-      </Grid.Column>
     </Grid.Row>
 
     <Grid.Row>
@@ -31,6 +28,10 @@ const SettingsPage = () => (
       <Grid.Column>
         <Header as="h3">Download</Header>
         <TextExportButton />
+      </Grid.Column>
+
+      <Grid.Column>
+        <GithubErrorsDisplay />
       </Grid.Column>
     </Grid.Row>
   </Grid>
