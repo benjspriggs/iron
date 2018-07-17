@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { Button } from "semantic-ui-react"
 import Download from "@axetroy/react-download"
 import { connect } from "react-redux"
+import { postType } from "./BlogPost"
 
 const formatPostForTextExport = post =>
   `${post.title} (by ${post.source})\n${
@@ -19,7 +20,7 @@ const TextExportButton = props => (
 )
 
 TextExportButton.propTypes = {
-  content: PropTypes.array
+  content: PropTypes.arrayOf(postType)
 }
 
 export default connect(state => ({ posts: Object.values(state.posts.posts) }))(
