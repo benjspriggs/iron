@@ -9,10 +9,22 @@ import BlogPost from "./BlogPost"
 const EnhancedBlogPost = (post, id) => (
   <List.Item key={id}>
     <BlogPost {...post} />
-    <Button icon labelPosition="left" as={Link} to={`/view/${post.id}`}>
-      <Icon name="eye" />
-      View
-    </Button>
+    <Button.Group>
+      <Button icon labelPosition="left" as={Link} to={`/view/${post.id}`}>
+        <Icon name="eye" />
+        View
+      </Button>
+      {post.url ? (
+        <Button
+          href={post.url}
+          icon="external alternate"
+          labelPosition="left"
+          content="Source"
+        />
+      ) : (
+        ""
+      )}
+    </Button.Group>
   </List.Item>
 )
 
