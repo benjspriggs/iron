@@ -55,3 +55,4 @@ For getting started locally:
 ## Credits
 
 `iron` was written primarily by Benjamin Spriggs (@benjspriggs on Github). [Contact](mailto:ben@sprico.com).
+The logo was contributed by Richard Caseres (@richardbmx on Github).
