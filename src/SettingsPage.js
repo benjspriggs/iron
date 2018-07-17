@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, Header, Divider } from "semantic-ui-react"
+import { Grid, Header } from "semantic-ui-react"
 
 import SimpleGithubRepoForm from "./SimpleGithubRepoForm"
 import GithubRepoForm from "./GithubRepoForm"
