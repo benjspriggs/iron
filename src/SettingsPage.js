@@ -5,10 +5,13 @@ import SimpleGithubRepoForm from "./SimpleGithubRepoForm"
 import GithubRepoForm from "./GithubRepoForm"
 import CurrentRepos from "./CurrentRepos"
 import GithubErrorsDisplay from "./GithubErrorsDisplay"
+import TextExportButton from "./TextExportButton"
 
 const SettingsPage = () => (
   <Container>
     <Header as="h2">Form</Header>
+    <Header as="h3">Download</Header>
+    <TextExportButton />
     <Header as="h3">Simple Form</Header>
     <SimpleGithubRepoForm />
     <Divider />
