@@ -38,6 +38,8 @@ export const {
   [POST_GET_CONTENT_DATE]: any => any
 })
 
+export const getKeyForPost = post => md5(JSON.stringify(post))
+
 export default handleActions(
   {
     [POST_GET_CONTENT_DONE]: (state, action) => {
@@ -45,7 +47,7 @@ export default handleActions(
 
       const existingPosts = _.get(state, storeKey, {})
 
-      const postKey = md5(JSON.stringify(action.payload))
+      const postKey = getKeyForPost(action.payload)
 
       if (existingPosts[postKey]) {
         return state
@@ -60,8 +62,8 @@ export default handleActions(
   { posts: {}, errors: {} }
 )
 
-export const parsePostsFromTextBody = (meta, body) =>
-  body
+export const parsePostsFromTextBody = ({ meta, _links, content }) =>
+  content
     .split("\n")
     .reduce(
       ([latestPost, ...allButLatest], line) => {
@@ -77,6 +79,7 @@ export const parsePostsFromTextBody = (meta, body) =>
     .map(([firstLine, ...rest]) => ({
       // TODO: pull from actual owner when we have that info
       source: meta.owner,
+      url: _links.html,
       title: firstLine,
       content: rest.map(r => `<p>${r}</p>`).join("")
     }))
@@ -210,9 +213,7 @@ export const postsEpic = combineEpics(
       ofType(POST_CONVERT_CONTENT_DONE),
       filter(action => action.payload.meta.extension === "txt"),
       mergeMap(action =>
-        from(
-          parsePostsFromTextBody(action.payload.meta, action.payload.content)
-        ).pipe(
+        from(parsePostsFromTextBody(action.payload)).pipe(
           map(post => ({ html: true, ...post })),
           map(postGetContentDone)
         )
