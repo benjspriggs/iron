@@ -4,6 +4,7 @@ import PostsPage from "./PostsPage"
 import SettingsPage from "./SettingsPage"
 import NoMatch from "./NoMatch"
 import ViewPage from "./ViewPage"
+import EditPage from "./EditPage"
 import {
   Container,
   Header,
@@ -33,6 +34,9 @@ class App extends Component {
             <Menu.Item as={Link} to="/settings">
               Settings
             </Menu.Item>
+            <Menu.Item as={Link} to="/edit">
+              Edit
+            </Menu.Item>
           </Menu>
         </Segment>
 
@@ -42,6 +46,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={PostsPage} />
             <Route exact path="/settings" component={SettingsPage} />
+            <Route exact path="/edit" component={EditPage} />
             <Route path="/view" component={ViewPage} />
             <Route component={NoMatch} />
           </Switch>
