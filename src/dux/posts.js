@@ -21,6 +21,9 @@ export const POST_CONVERT_CONTENT_DONE = "POST_CONVERT_CONTENT_DONE"
 export const POST_GET_CONTENT_DONE = "POST_GET_CONTENT_DONE"
 export const POST_LOAD_ALL_FROM_REPO = "POST_LOAD_ALL_FROM_REPO"
 export const POST_GET_CONTENT_DATE = "POST_GET_CONTENT_DATE"
+export const POST_CREATE = "POST_CREATE"
+export const POST_DELETE = "POST_DELETE"
+export const POST_UPDATE = "POST_UPDATE"
 
 export const {
   postGetContent,
@@ -28,20 +31,57 @@ export const {
   postConvertContentDone,
   postGetContentDone,
   postLoadAllFromRepo,
-  postGetContentDate
+  postGetContentDate,
+  postCreate,
+  postDelete,
+  postUpdate
 } = createActions({
   [POST_GET_CONTENT]: any => any,
   [POST_CONVERT_CONTENT]: any => any,
   [POST_CONVERT_CONTENT_DONE]: null,
   [POST_GET_CONTENT_DONE]: any => any,
   [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, data }) => ({ owner, repo, data }),
-  [POST_GET_CONTENT_DATE]: any => any
+  [POST_GET_CONTENT_DATE]: any => any,
+  [POST_CREATE]: any => ({ ...any }),
+  [POST_DELETE]: any => ({ ...any }),
+  [POST_UPDATE]: (postId, updates) => ({ postId, ...updates })
 })
 
 export const getKeyForPost = post => md5(JSON.stringify(post))
 
 export default handleActions(
   {
+    [POST_CREATE]: (state, action) => {
+      const existingPosts = _.get(state, "posts", {})
+
+      return {
+        ...state,
+        posts: {
+          ...existingPosts,
+          [getKeyForPost(action.payload)]: action.payload
+        }
+      }
+    },
+    [POST_DELETE]: (state, action) => {
+      const existingPosts = _.get(state, "posts", {})
+
+      return {
+        ...state,
+        posts: {
+          ..._.omit(existingPosts, getKeyForPost(action.payload))
+        }
+      }
+    },
+    [POST_UPDATE]: (state, action) => {
+      const existingPosts = _.get(state, "posts", {})
+
+      const postKey = action.payload.postId
+      const withUpdatedPost = { ...existingPosts, [postKey]: action.payload }
+      return {
+        ...state,
+        posts: withUpdatedPost
+      }
+    },
     [POST_GET_CONTENT_DONE]: (state, action) => {
       const storeKey = action.error ? "errors" : "posts"
 

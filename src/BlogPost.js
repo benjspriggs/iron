@@ -13,7 +13,13 @@ export const BlogPost = ({ title, source, html, content, tags, date, url }) => (
     </Header>
 
     <Container text>
-      {html ? renderHTML(html) : content ? content.join(<br />) : ""}
+      {html
+        ? renderHTML(html)
+        : content
+          ? Array.prototype.map.call(content, (line, idx) => (
+              <p key={idx}>{line}</p>
+            ))
+          : ""}
     </Container>
   </Container>
 )
