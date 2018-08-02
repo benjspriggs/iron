@@ -8,7 +8,8 @@ export const BlogPost = ({ title, source, html, content, tags, date, url }) => (
     <Header as="h2">
       {title}
       <Header.Subheader>
-        by {source} {date ? ", " + date : ""}
+        by {source}
+        {date ? ", on " + date : ""}
       </Header.Subheader>
     </Header>
 

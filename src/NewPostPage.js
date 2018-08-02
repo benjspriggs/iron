@@ -1,6 +1,11 @@
 import React from "react"
 import { connect } from "react-redux"
-import { updateContent, updateSource, updateTitle } from "./dux/edit"
+import {
+  updateContent,
+  updateSource,
+  updateTitle,
+  updateDate
+} from "./dux/edit"
 import { postCreate } from "./dux/posts"
 import PostEditor from "./PostEditor"
 
@@ -12,6 +17,7 @@ export default connect(
     updateContent: v => dispatch(updateContent(v)),
     updateSource: v => dispatch(updateSource(v)),
     updateTitle: v => dispatch(updateTitle(v)),
+    updateDate: v => dispatch(updateDate(v)),
     handlePostUpdate: post => dispatch(postCreate(post))
   })
 )(NewPostPage)

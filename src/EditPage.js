@@ -29,6 +29,7 @@ const EditorFromId = props => {
           updateContent={v => props.updateContent(postId, v)}
           updateSource={v => props.updateSource(postId, v)}
           updateTitle={v => props.updateTitle(postId, v)}
+          updateDate={v => props.updateDate(postId, v)}
           handlePostUpdate={props.handlePostUpdate}
         />
         <Button icon labelPosition="left" as={Link} to={"/view/" + postId}>
@@ -63,8 +64,6 @@ const ConnectedEditorFromId = connect(
 
     const post = state.posts[postId]
 
-    console.dir(post)
-
     return {
       ...state,
       ...dispatch,
@@ -74,6 +73,7 @@ const ConnectedEditorFromId = connect(
       updateSource: (id, source) =>
         dispatch(postUpdate(id, { ...post, source })),
       updateTitle: (id, title) => dispatch(postUpdate(id, { ...post, title })),
+      updateDate: (id, date) => dispatch(postUpdate(id, { ...post, date })),
       handlePostUpdate: post => dispatch(postUpdate(post.postId, post))
     }
   }
