@@ -18,6 +18,7 @@ export default connect(
     updateSource: v => dispatch(updateSource(v)),
     updateTitle: v => dispatch(updateTitle(v)),
     updateDate: v => dispatch(updateDate(v)),
-    handlePostUpdate: post => dispatch(postCreate(post))
+    handlePostUpdate: post =>
+      dispatch(postCreate({ ...post, meta: { extension: "md" } }))
   })
 )(NewPostPage)
