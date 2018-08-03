@@ -26,7 +26,7 @@ const PostEditor = props => (
       <Segment>
         <Editor
           id="content"
-          defaultValue={_.join(props.post.content, "")}
+          defaultValue={_.join(props.post.content, "\n")}
           onChange={content => props.updateContent(content.split("\n"))}
         />
       </Segment>
