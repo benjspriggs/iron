@@ -54,11 +54,27 @@ export default handleActions(
     [POST_CREATE]: (state, action) => {
       const existingPosts = _.get(state, "posts", {})
 
+      let post = action.payload
+
+      if (_.get(post, "meta.extension") === "md") {
+        // parse this as markdown/ html
+        const { title, content, ...rest } = post
+        const tokens = lexer.lex(content.join("\n"))
+        let withLinks = [...tokens]
+        withLinks.links = tokens.links
+        post = {
+          title,
+          content,
+          html: parser.parse(withLinks),
+          ...rest
+        }
+      }
+
       return {
         ...state,
         posts: {
           ...existingPosts,
-          [getKeyForPost(action.payload)]: action.payload
+          [getKeyForPost(post)]: post
         }
       }
     },
