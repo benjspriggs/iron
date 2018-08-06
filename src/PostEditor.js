@@ -38,12 +38,14 @@ const PostEditor = props => (
             />
           </Segment>
         </Form.Field>
-        <DateInput
-          name="date"
-          placeholder="Date"
-          value={props.post.date ? props.post.date : ""}
-          onChange={(e, i) => props.updateDate(i.value)}
-        />
+        <Form.Field>
+          <DateInput
+            name="date"
+            placeholder="Date"
+            value={props.post.date ? props.post.date : ""}
+            onChange={(e, i) => props.updateDate(i.value)}
+          />
+        </Form.Field>
         <Button
           type="submit"
           onClick={() => props.handlePostUpdate(props.post)}
