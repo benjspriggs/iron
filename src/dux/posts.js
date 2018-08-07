@@ -52,14 +52,14 @@ export const getKeyForPost = post => md5(JSON.stringify(post))
 const withRenderedMarkdown = post => {
   // parse this as markdown/ html
   const { title, content, ...rest } = post
-  const tokens = lexer.lex(content.join("\n"))
+  const tokens = new marked.Lexer().lex(content.join("\n"))
   let withLinks = [...tokens]
   withLinks.links = tokens.links
   return {
     ...rest,
     title,
     content,
-    html: parser.parse(withLinks)
+    html: new marked.Parser().parse(withLinks)
   }
 }
 
@@ -101,7 +101,6 @@ export default handleActions(
         ...existingPost,
         ...action.payload
       })
-      console.dir(newPost)
 
       const withUpdatedPost = { ...existingPosts, [postKey]: newPost }
 
