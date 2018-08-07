@@ -10,12 +10,19 @@
     "@axetroy/react-download": "^1.1.1",
     "@octokit/rest": "^15.9.4",
     "base-64": "^0.1.0",
+    "concurrently": "^3.6.1",
     "connected-react-router": "^4.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "express": "^4.16.3",
     "formik": "^0.11.11",
     "history": "^4.7.2",
+    "knex": "^0.15.2",
     "marked": "^0.4.0",
     "md5": "^2.2.1",
+    "nodemon": "^1.18.3",
+    "pg": "^7.4.3",
+    "pg-connection-string": "^2.0.0",
+    "pg-promise": "^8.4.5",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -36,6 +43,7 @@
     "semantic-ui-calendar-react": "^0.7.1",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-react": "^0.81.3",
+    "sqlite": "^2.9.2",
     "yup": "^0.25.1"
   },
   "scripts": {
@@ -45,7 +53,8 @@
     "eject": "react-scripts eject",
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
-    "prepush": "pretty-quick"
+    "prepush": "pretty-quick",
+    "server": "nodemon src/server/index.js"
   },
   "license": "MIT",
   "repository": {
