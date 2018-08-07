@@ -32,11 +32,11 @@ class App extends Component {
             <Menu.Item as={Link} to="/">
               Home
             </Menu.Item>
-            <Menu.Item as={Link} to="/settings">
-              Settings
-            </Menu.Item>
             <Menu.Item as={Link} to="/create">
               Create
+            </Menu.Item>
+            <Menu.Item position="right" as={Link} to="/settings">
+              Settings
             </Menu.Item>
           </Menu>
         </Segment>
