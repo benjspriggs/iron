@@ -49,6 +49,20 @@ export const {
 
 export const getKeyForPost = post => md5(JSON.stringify(post))
 
+const withRenderedMarkdown = post => {
+  // parse this as markdown/ html
+  const { title, content, ...rest } = post
+  const tokens = lexer.lex(content.join("\n"))
+  let withLinks = [...tokens]
+  withLinks.links = tokens.links
+  return {
+    ...rest,
+    title,
+    content,
+    html: parser.parse(withLinks)
+  }
+}
+
 export default handleActions(
   {
     [POST_CREATE]: (state, action) => {
@@ -57,17 +71,7 @@ export default handleActions(
       let post = action.payload
 
       if (_.get(post, "meta.extension") === "md") {
-        // parse this as markdown/ html
-        const { title, content, ...rest } = post
-        const tokens = lexer.lex(content.join("\n"))
-        let withLinks = [...tokens]
-        withLinks.links = tokens.links
-        post = {
-          title,
-          content,
-          html: parser.parse(withLinks),
-          ...rest
-        }
+        post = withRenderedMarkdown(post)
       }
 
       return {
@@ -92,7 +96,15 @@ export default handleActions(
       const existingPosts = _.get(state, "posts", {})
 
       const postKey = action.payload.postId
-      const withUpdatedPost = { ...existingPosts, [postKey]: action.payload }
+      const existingPost = existingPosts[postKey]
+      const newPost = withRenderedMarkdown({
+        ...existingPost,
+        ...action.payload
+      })
+      console.dir(newPost)
+
+      const withUpdatedPost = { ...existingPosts, [postKey]: newPost }
+
       return {
         ...state,
         posts: withUpdatedPost
