@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Route, Switch } from "react-router"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
-import { Container, Button, Icon } from "semantic-ui-react"
+import { Container, Button, Icon, Divider } from "semantic-ui-react"
 
 import BlogPost from "./BlogPost"
 import PostEditor from "./PostEditor"
@@ -33,6 +33,7 @@ const EditorFromId = props => {
           handlePostUpdate={props.handlePostUpdate}
           handlePostDelete={props.handlePostDelete}
         />
+        <Divider />
         <Button icon labelPosition="left" as={Link} to={"/view/" + postId}>
           <Icon name="eye" />
           View
