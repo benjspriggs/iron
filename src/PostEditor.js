@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Editor from "rich-markdown-editor"
-import { Form, Container, Button, Input, Segment } from "semantic-ui-react"
+import { Form, Button, Input, Segment } from "semantic-ui-react"
 import BlogPost from "./BlogPost"
 import _ from "lodash"
 import { DateInput } from "semantic-ui-calendar-react"
