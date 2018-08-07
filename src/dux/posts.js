@@ -43,7 +43,7 @@ export const {
   [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, data }) => ({ owner, repo, data }),
   [POST_GET_CONTENT_DATE]: any => any,
   [POST_CREATE]: any => ({ ...any }),
-  [POST_DELETE]: any => ({ ...any }),
+  [POST_DELETE]: postId => ({ postId }),
   [POST_UPDATE]: (postId, updates) => ({ postId, ...updates })
 })
 
@@ -88,7 +88,7 @@ export default handleActions(
       return {
         ...state,
         posts: {
-          ..._.omit(existingPosts, getKeyForPost(action.payload))
+          ..._.omit(existingPosts, action.payload.postId)
         }
       }
     },

@@ -8,7 +8,7 @@ import { Container, Button, Icon } from "semantic-ui-react"
 import BlogPost from "./BlogPost"
 import PostEditor from "./PostEditor"
 import NoMatch from "./NoMatch"
-import { postUpdate } from "./dux/posts"
+import { postUpdate, postDelete } from "./dux/posts"
 
 const EditorFromId = props => {
   const {
@@ -31,6 +31,7 @@ const EditorFromId = props => {
           updateTitle={v => props.updateTitle(postId, v)}
           updateDate={v => props.updateDate(postId, v)}
           handlePostUpdate={props.handlePostUpdate}
+          handlePostDelete={props.handlePostDelete}
         />
         <Button icon labelPosition="left" as={Link} to={"/view/" + postId}>
           <Icon name="eye" />
@@ -73,7 +74,8 @@ const ConnectedEditorFromId = connect(
       updateSource: (id, source) =>
         dispatch(postUpdate(id, { ...post, source })),
       updateTitle: (id, title) => dispatch(postUpdate(id, { ...post, title })),
-      updateDate: (id, date) => dispatch(postUpdate(id, { ...post, date }))
+      updateDate: (id, date) => dispatch(postUpdate(id, { ...post, date })),
+      handlePostDelete: post => dispatch(postDelete(post.postId))
     }
   }
 )(EditorFromId)

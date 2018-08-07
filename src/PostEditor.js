@@ -60,6 +60,13 @@ const PostEditor = props => (
         ) : (
           ""
         )}
+        {props.handlePostDelete ? (
+          <Button negative onClick={() => props.handlePostDelete(props.post)}>
+            Delete
+          </Button>
+        ) : (
+          ""
+        )}
       </Form>
     )}
   />
@@ -68,6 +75,7 @@ const PostEditor = props => (
 PostEditor.propTypes = {
   buttonText: PropTypes.string.isRequired,
   handlePostUpdate: PropTypes.func,
+  handlePostDelete: PropTypes.func,
   updateTitle: PropTypes.func.isRequired,
   updateSource: PropTypes.func.isRequired,
   updateContent: PropTypes.func.isRequired,
