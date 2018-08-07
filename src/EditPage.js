@@ -73,8 +73,7 @@ const ConnectedEditorFromId = connect(
       updateSource: (id, source) =>
         dispatch(postUpdate(id, { ...post, source })),
       updateTitle: (id, title) => dispatch(postUpdate(id, { ...post, title })),
-      updateDate: (id, date) => dispatch(postUpdate(id, { ...post, date })),
-      handlePostUpdate: post => dispatch(postUpdate(post.postId, post))
+      updateDate: (id, date) => dispatch(postUpdate(id, { ...post, date }))
     }
   }
 )(EditorFromId)

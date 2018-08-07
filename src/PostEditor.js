@@ -13,22 +13,34 @@ const PostEditor = props => (
   <Formik
     render={() => (
       <Form>
-        <Form.Field>
-          <Input
-            required
-            placeholder="Title"
-            value={props.post.title}
-            onChange={(e, input) => props.updateTitle(input.value)}
-          />
-        </Form.Field>
-        <Form.Field>
-          <Input
-            required
-            placeholder="Author"
-            value={props.post.source}
-            onChange={(e, input) => props.updateSource(input.value)}
-          />
-        </Form.Field>
+        <Form.Group widths="equal">
+          <Form.Field>
+            <Input
+              label="Title"
+              required
+              placeholder="What should the post be titled?"
+              value={props.post.title}
+              onChange={(e, input) => props.updateTitle(input.value)}
+            />
+          </Form.Field>
+          <Form.Field>
+            <Input
+              label="Author"
+              required
+              placeholder="Who wrote it?"
+              value={props.post.source}
+              onChange={(e, input) => props.updateSource(input.value)}
+            />
+          </Form.Field>
+          <Form.Field>
+            <DateInput
+              label="Date"
+              name="date"
+              value={props.post.date ? props.post.date : ""}
+              onChange={(e, i) => props.updateDate(i.value)}
+            />
+          </Form.Field>
+        </Form.Group>
         <Form.Field>
           <Segment>
             <Editor
@@ -38,20 +50,16 @@ const PostEditor = props => (
             />
           </Segment>
         </Form.Field>
-        <Form.Field>
-          <DateInput
-            name="date"
-            placeholder="Date"
-            value={props.post.date ? props.post.date : ""}
-            onChange={(e, i) => props.updateDate(i.value)}
-          />
-        </Form.Field>
-        <Button
-          type="submit"
-          onClick={() => props.handlePostUpdate(props.post)}
-        >
-          {props.buttonText}
-        </Button>
+        {props.handlePostUpdate ? (
+          <Button
+            type="submit"
+            onClick={() => props.handlePostUpdate(props.post)}
+          >
+            {props.buttonText}
+          </Button>
+        ) : (
+          ""
+        )}
       </Form>
     )}
   />
@@ -59,7 +67,7 @@ const PostEditor = props => (
 
 PostEditor.propTypes = {
   buttonText: PropTypes.string.isRequired,
-  handlePostUpdate: PropTypes.func.isRequired,
+  handlePostUpdate: PropTypes.func,
   updateTitle: PropTypes.func.isRequired,
   updateSource: PropTypes.func.isRequired,
   updateContent: PropTypes.func.isRequired,
