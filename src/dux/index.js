@@ -7,8 +7,7 @@ import { combineEpics } from "redux-observable"
 export default combineReducers({
   github: github,
   posts: posts,
-  edit: edit,
-  posts: posts
+  edit: edit
 })
 
 export const rootEpic = combineEpics(githubEpic, postsEpic)
