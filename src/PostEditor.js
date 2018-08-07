@@ -11,8 +11,9 @@ import "semantic-ui-calendar-react/dist/css/calendar.min.css"
 
 const PostEditor = props => (
   <Formik
-    render={() => (
-      <Form>
+    onSubmit={() => props.handlePostUpdate(props.post)}
+    render={renderProps => (
+      <Form onSubmit={renderProps.handleSubmit}>
         <Form.Group widths="equal">
           <Form.Field>
             <Input
@@ -50,23 +51,20 @@ const PostEditor = props => (
             />
           </Segment>
         </Form.Field>
-        {props.handlePostUpdate ? (
-          <Button
-            type="submit"
-            onClick={() => props.handlePostUpdate(props.post)}
-          >
-            {props.buttonText}
-          </Button>
-        ) : (
-          ""
-        )}
-        {props.handlePostDelete ? (
-          <Button negative onClick={() => props.handlePostDelete(props.post)}>
-            Delete
-          </Button>
-        ) : (
-          ""
-        )}
+        <Button.Group>
+          {props.handlePostUpdate ? (
+            <Button type="submit">{props.buttonText}</Button>
+          ) : (
+            ""
+          )}
+          {props.handlePostDelete ? (
+            <Button negative onClick={() => props.handlePostDelete(props.post)}>
+              Delete
+            </Button>
+          ) : (
+            ""
+          )}
+        </Button.Group>
       </Form>
     )}
   />
