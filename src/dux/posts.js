@@ -21,6 +21,9 @@ export const POST_CONVERT_CONTENT_DONE = "POST_CONVERT_CONTENT_DONE"
 export const POST_GET_CONTENT_DONE = "POST_GET_CONTENT_DONE"
 export const POST_LOAD_ALL_FROM_REPO = "POST_LOAD_ALL_FROM_REPO"
 export const POST_GET_CONTENT_DATE = "POST_GET_CONTENT_DATE"
+export const POST_CREATE = "POST_CREATE"
+export const POST_DELETE = "POST_DELETE"
+export const POST_UPDATE = "POST_UPDATE"
 
 export const {
   postGetContent,
@@ -28,20 +31,84 @@ export const {
   postConvertContentDone,
   postGetContentDone,
   postLoadAllFromRepo,
-  postGetContentDate
+  postGetContentDate,
+  postCreate,
+  postDelete,
+  postUpdate
 } = createActions({
   [POST_GET_CONTENT]: any => any,
   [POST_CONVERT_CONTENT]: any => any,
   [POST_CONVERT_CONTENT_DONE]: null,
   [POST_GET_CONTENT_DONE]: any => any,
   [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, data }) => ({ owner, repo, data }),
-  [POST_GET_CONTENT_DATE]: any => any
+  [POST_GET_CONTENT_DATE]: any => any,
+  [POST_CREATE]: any => ({ ...any }),
+  [POST_DELETE]: postId => ({ postId }),
+  [POST_UPDATE]: (postId, updates) => ({ postId, ...updates })
 })
 
 export const getKeyForPost = post => md5(JSON.stringify(post))
 
+const withRenderedMarkdown = post => {
+  // parse this as markdown/ html
+  const { title, content, ...rest } = post
+  const tokens = new marked.Lexer().lex(content.join("\n"))
+  let withLinks = [...tokens]
+  withLinks.links = tokens.links
+  return {
+    ...rest,
+    title,
+    content,
+    html: new marked.Parser().parse(withLinks)
+  }
+}
+
 export default handleActions(
   {
+    [POST_CREATE]: (state, action) => {
+      const existingPosts = _.get(state, "posts", {})
+
+      let post = action.payload
+
+      if (_.get(post, "meta.extension") === "md") {
+        post = withRenderedMarkdown(post)
+      }
+
+      return {
+        ...state,
+        posts: {
+          ...existingPosts,
+          [getKeyForPost(post)]: post
+        }
+      }
+    },
+    [POST_DELETE]: (state, action) => {
+      const existingPosts = _.get(state, "posts", {})
+
+      return {
+        ...state,
+        posts: {
+          ..._.omit(existingPosts, action.payload.postId)
+        }
+      }
+    },
+    [POST_UPDATE]: (state, action) => {
+      const existingPosts = _.get(state, "posts", {})
+
+      const postKey = action.payload.postId
+      const existingPost = existingPosts[postKey]
+      const newPost = withRenderedMarkdown({
+        ...existingPost,
+        ...action.payload
+      })
+
+      const withUpdatedPost = { ...existingPosts, [postKey]: newPost }
+
+      return {
+        ...state,
+        posts: withUpdatedPost
+      }
+    },
     [POST_GET_CONTENT_DONE]: (state, action) => {
       const storeKey = action.error ? "errors" : "posts"
 

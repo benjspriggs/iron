@@ -8,7 +8,13 @@ import { ofType, combineEpics } from "redux-observable"
 export const REPO_GET_CONTENT = "REPO_GET_CONTENT"
 export const REPO_GET_CONTENT_DONE = "REPO_GET_CONTENT_DONE"
 export const AS_LIST_KEY = "list"
-export const octokit = Octokit()
+export const octokit = Octokit({
+  timeout: 0,
+  headers: {
+    accept: "application/vnd.github.v3+json",
+    "user-agent": "octokit/rest.js v1.2.3"
+  }
+})
 
 export const { repoGetContent, clearGithubErrors } = createActions({
   [REPO_GET_CONTENT]: options => ({ ...options }),

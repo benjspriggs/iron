@@ -11,12 +11,19 @@ const EnhancedBlogPost = (post, id) => (
   <List.Item key={id}>
     <BlogPost {...post} />
     <Button.Group>
-      <Button icon labelPosition="left" as={Link} to={`/view/${post.id}`}>
+      <Button
+        id="view-icon"
+        icon
+        labelPosition="left"
+        as={Link}
+        to={`/view/${post.id}`}
+      >
         <Icon name="eye" />
         View
       </Button>
       {post.url ? (
         <Button
+          id="source-iron"
           href={post.url}
           icon="external alternate"
           labelPosition="left"
