@@ -16,13 +16,17 @@ import "semantic-ui-css/semantic.min.css"
 const target = document.getElementById("root")
 
 const startPolling = dispatch => () => dispatch(pollStart())
+const stopPolling = dispatch => () => dispatch(pollStop())
 
 render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ConnectedRouter history={history}>
         <div>
-          <App onPostsPageEnter={startPolling(store.dispatch)} />
+          <App
+            onPostsPageEnter={startPolling(store.dispatch)}
+            onPostsPageExit={stopPolling(store.dispatch)}
+          />
           <Divider />
           <RefreshState persistor={persistor} />
         </div>

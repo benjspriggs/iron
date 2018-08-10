@@ -25,9 +25,12 @@ class App extends Component {
     onPostsPageEnter()
   }
 
-  render() {
-    const { onPostsPageEnter } = this.props
+  componentWillUnmount() {
+    const { onPostsPageExit } = this.props
+    onPostsPageExit()
+  }
 
+  render() {
     return (
       <Container>
         <Header as="h1" attached="top">
@@ -67,7 +70,8 @@ class App extends Component {
 }
 
 App.propTypes = {
-  onPostsPageEnter: PropTypes.func.isRequired
+  onPostsPageEnter: PropTypes.func.isRequired,
+  onPostsPageExit: PropTypes.func.isRequired
 }
 
 export default App
