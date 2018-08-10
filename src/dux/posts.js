@@ -2,7 +2,7 @@
 // blobs into posts
 import { from } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import { filter, map, mergeMap } from "rxjs/operators"
+import { tap, filter, map, mergeMap, catchError } from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
@@ -15,6 +15,10 @@ import { octokit } from "./github"
 export const lexer = new marked.Lexer()
 export const parser = new marked.Parser()
 
+const config = {
+  API_BASE_URL: "http://localhost:5000"
+}
+
 export const POST_GET_CONTENT = "POST_GET_CONTENT"
 export const POST_CONVERT_CONTENT = "POST_CONVERT_CONTENT"
 export const POST_CONVERT_CONTENT_DONE = "POST_CONVERT_CONTENT_DONE"
@@ -24,6 +28,7 @@ export const POST_GET_CONTENT_DATE = "POST_GET_CONTENT_DATE"
 export const POST_CREATE = "POST_CREATE"
 export const POST_DELETE = "POST_DELETE"
 export const POST_UPDATE = "POST_UPDATE"
+export const POST_GET = "POST_GET"
 
 export const {
   postGetContent,
@@ -34,7 +39,8 @@ export const {
   postGetContentDate,
   postCreate,
   postDelete,
-  postUpdate
+  postUpdate,
+  postGet
 } = createActions({
   [POST_GET_CONTENT]: any => any,
   [POST_CONVERT_CONTENT]: any => any,
@@ -44,10 +50,11 @@ export const {
   [POST_GET_CONTENT_DATE]: any => any,
   [POST_CREATE]: any => ({ ...any }),
   [POST_DELETE]: postId => ({ postId }),
-  [POST_UPDATE]: (postId, updates) => ({ postId, ...updates })
+  [POST_UPDATE]: (postId, updates) => ({ postId, ...updates }),
+  [POST_GET]: postId => ({ postId })
 })
 
-export const getKeyForPost = post => md5(JSON.stringify(post))
+export const getKeyForPost = post => post.postId
 
 const withRenderedMarkdown = post => {
   // parse this as markdown/ html
@@ -69,6 +76,10 @@ export default handleActions(
       const existingPosts = _.get(state, "posts", {})
 
       let post = action.payload
+
+      if (!post.postId) {
+        return
+      }
 
       if (_.get(post, "meta.extension") === "md") {
         post = withRenderedMarkdown(post)
@@ -284,6 +295,19 @@ export const postsEpic = combineEpics(
         from(parsePostsFromTextBody(action.payload)).pipe(
           map(postGetContentDone)
         )
+      )
+    ),
+
+  // postCreate
+  action$ =>
+    action$.pipe(
+      ofType(POST_CREATE),
+      filter(post => !post.postId),
+      mergeMap(action =>
+        ajax.post({
+          url: `${config.API_BASE_URL}/post`,
+          body: JSON.stringify(action.payload)
+        })
       )
     )
 )
