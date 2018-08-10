@@ -58,7 +58,7 @@ app.post("/post", (req, res, next) => {
       source,
       date
     })
-    .then(([rowId]) => res.send({ rowId, title, content, source, date }))
+    .then(([id]) => res.send({ id, title, content, source, date, html }))
     .catch(next)
 })
 
