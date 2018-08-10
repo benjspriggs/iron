@@ -74,6 +74,10 @@ export const {
 export const getKeyForPost = post => post.postId
 
 const withRenderedMarkdown = post => {
+  if (!post.content) {
+    return post
+  }
+
   // parse this as markdown/ html
   const { title, content, ...rest } = post
   const tokens = new marked.Lexer().lex(content.join("\n"))
@@ -89,7 +93,10 @@ const withRenderedMarkdown = post => {
 
 const conformServerResponse = response =>
   response.posts
-    .map(post => ({ ...post, content: post.content.split(response.newline) }))
+    .map(post => ({
+      ...post,
+      content: post.content ? post.content.split(response.newline) : null
+    }))
     .map(withRenderedMarkdown)
 
 export default handleActions(
@@ -143,6 +150,8 @@ export default handleActions(
       }
     },
     [POST_GET_CONTENT_DONE]: (state, action) => {
+      // TODO: remove
+      return state
       const storeKey = action.error ? "errors" : "posts"
 
       const existingPosts = _.get(state, storeKey, {})
@@ -324,6 +333,13 @@ export const postsEpic = combineEpics(
           map(postGetContentDone)
         )
       )
+    ),
+
+  // postGetContentDone -> server
+  action$ =>
+    action$.pipe(
+      ofType(postGetContentDone),
+      map(action => postCreate(action.payload))
     ),
 
   // postCreate
