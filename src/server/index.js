@@ -50,7 +50,12 @@ const newline = "\n"
 
 const deserializePost = post => ({ ...post, meta: JSON.parse(post.meta) })
 
-app.post("/post", (req, res, next) => {
+const handleErr = res => err => {
+  console.dir(err)
+  return res.send({ err })
+}
+
+app.post("/post", (req, res) => {
   const { title, content, source, date, meta } = req.body.post
 
   knex("posts")
@@ -62,7 +67,17 @@ app.post("/post", (req, res, next) => {
       date
     })
     .then(([id]) => res.send({ id, title, content, source, date, meta }))
-    .catch(next)
+    .catch(handleErr(res))
+})
+
+app.put("/post", (req, res, next) => {
+  const { id, ...post } = req.body.post
+
+  knex("posts")
+    .where("id", id)
+    .update(post)
+    .then(rows => res.send({ rows_affected: rows }))
+    .catch(handleErr(res))
 })
 
 app.get("/post", (req, res, next) => {
@@ -77,7 +92,17 @@ app.get("/post", (req, res, next) => {
     .then(posts =>
       res.send({ posts: posts.map(deserializePost), query, newline })
     )
-    .catch(next)
+    .catch(handleErr(res))
+})
+
+app.delete("/post", (req, res, next) => {
+  const query = !_.isEmpty(req.query) ? req.query : req.body
+
+  knex("posts")
+    .where("id", query.id)
+    .del()
+    .then(res.send)
+    .catch(handleErr(res))
 })
 
 app.listen(port)
