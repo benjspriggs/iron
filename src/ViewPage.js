@@ -12,17 +12,17 @@ const BlogPostFromId = connect(state => ({ posts: state.posts.posts }))(
   props => {
     const {
       match: {
-        params: { postId }
+        params: { id }
       }
     } = props
 
-    const post = props.posts[postId]
+    const post = props.posts[id]
 
     if (post) {
       return (
         <Container>
-          <BlogPost id={postId} {...post} />
-          <Button icon labelPosition="left" as={Link} to={`/edit/${postId}`}>
+          <BlogPost id={id} {...post} />
+          <Button icon labelPosition="left" as={Link} to={`/edit/${id}`}>
             <Icon name="edit" />
             Edit
           </Button>
@@ -37,7 +37,7 @@ const BlogPostFromId = connect(state => ({ posts: state.posts.posts }))(
 BlogPostFromId.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      postId: PropTypes.string
+      id: PropTypes.string
     })
   })
 }
@@ -45,7 +45,7 @@ BlogPostFromId.propTypes = {
 const ViewPage = props => (
   <Switch>
     <Route exact path="/view" component={NoMatch} />
-    <Route path="/view/:postId" component={BlogPostFromId} />
+    <Route path="/view/:id" component={BlogPostFromId} />
   </Switch>
 )
 

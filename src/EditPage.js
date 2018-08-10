@@ -13,28 +13,28 @@ import { postUpdate, postDelete } from "./dux/posts"
 const EditorFromId = props => {
   const {
     match: {
-      params: { postId }
+      params: { id }
     }
   } = props
 
-  const post = props.posts[postId]
+  const post = props.posts[id]
 
   if (post) {
     return (
       <Container>
         <PostEditor
-          id={postId}
+          id={id}
           buttonText={"Save"}
           post={post}
-          updateContent={v => props.updateContent(postId, v)}
-          updateSource={v => props.updateSource(postId, v)}
-          updateTitle={v => props.updateTitle(postId, v)}
-          updateDate={v => props.updateDate(postId, v)}
+          updateContent={v => props.updateContent(id, v)}
+          updateSource={v => props.updateSource(id, v)}
+          updateTitle={v => props.updateTitle(id, v)}
+          updateDate={v => props.updateDate(id, v)}
           handlePostUpdate={props.handlePostUpdate}
           handlePostDelete={props.handlePostDelete}
         />
         <Divider />
-        <Button icon labelPosition="left" as={Link} to={"/view/" + postId}>
+        <Button icon labelPosition="left" as={Link} to={"/view/" + id}>
           <Icon name="eye" />
           View
         </Button>
@@ -48,7 +48,7 @@ const EditorFromId = props => {
 EditorFromId.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      postId: PropTypes.string
+      id: PropTypes.string
     })
   }),
   posts: PropTypes.shape({ posts: PropTypes.shape({ ...BlogPost.propTypes }) })
@@ -60,11 +60,11 @@ const ConnectedEditorFromId = connect(
   (state, { dispatch }, props) => {
     const {
       match: {
-        params: { postId }
+        params: { id }
       }
     } = props
 
-    const post = state.posts[postId]
+    const post = state.posts[id]
 
     return {
       ...state,
@@ -76,7 +76,7 @@ const ConnectedEditorFromId = connect(
         dispatch(postUpdate(id, { ...post, source })),
       updateTitle: (id, title) => dispatch(postUpdate(id, { ...post, title })),
       updateDate: (id, date) => dispatch(postUpdate(id, { ...post, date })),
-      handlePostDelete: post => dispatch(postDelete(post.postId))
+      handlePostDelete: post => dispatch(postDelete(post.id))
     }
   }
 )(EditorFromId)
@@ -84,7 +84,7 @@ const ConnectedEditorFromId = connect(
 const EditPage = props => (
   <Switch>
     <Route exact path="/edit" component={NoMatch} />
-    <Route path="/edit/:postId" component={ConnectedEditorFromId} />
+    <Route path="/edit/:id" component={ConnectedEditorFromId} />
   </Switch>
 )
 

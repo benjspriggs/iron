@@ -1,19 +1,23 @@
 // Provides epics, etc for translating
 // blobs into posts
-import { from } from "rxjs"
+import { from, timer } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import { filter, map, mergeMap } from "rxjs/operators"
+import { filter, map, switchMap, mergeMap, takeUntil } from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
 import { decode } from "base-64"
 import _ from "lodash"
-import md5 from "md5"
 
 import { octokit } from "./github"
 
 export const lexer = new marked.Lexer()
 export const parser = new marked.Parser()
+
+const config = {
+  // TODO: make configurable
+  API_BASE_URL: "http://localhost:5000"
+}
 
 export const POST_GET_CONTENT = "POST_GET_CONTENT"
 export const POST_CONVERT_CONTENT = "POST_CONVERT_CONTENT"
@@ -24,6 +28,11 @@ export const POST_GET_CONTENT_DATE = "POST_GET_CONTENT_DATE"
 export const POST_CREATE = "POST_CREATE"
 export const POST_DELETE = "POST_DELETE"
 export const POST_UPDATE = "POST_UPDATE"
+export const POST_GET = "POST_GET"
+export const POST_GET_ALL = "POST_GET_ALL"
+export const POST_GET_ALL_RESPONSE = "POST_GET_ALL_RESPONSE"
+export const POLL_START = "POLL_START"
+export const POLL_STOP = "POLL_STOP"
 
 export const {
   postGetContent,
@@ -34,7 +43,11 @@ export const {
   postGetContentDate,
   postCreate,
   postDelete,
-  postUpdate
+  postUpdate,
+  postGet,
+  postGetAll,
+  pollStart,
+  pollStop
 } = createActions({
   [POST_GET_CONTENT]: any => any,
   [POST_CONVERT_CONTENT]: any => any,
@@ -43,13 +56,21 @@ export const {
   [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, data }) => ({ owner, repo, data }),
   [POST_GET_CONTENT_DATE]: any => any,
   [POST_CREATE]: any => ({ ...any }),
-  [POST_DELETE]: postId => ({ postId }),
-  [POST_UPDATE]: (postId, updates) => ({ postId, ...updates })
+  [POST_DELETE]: id => ({ id }),
+  [POST_UPDATE]: (id, updates) => ({ id, ...updates }),
+  [POST_GET]: id => ({ id }),
+  [POST_GET_ALL]: null,
+  [POLL_START]: null,
+  [POLL_STOP]: null
 })
 
-export const getKeyForPost = post => md5(JSON.stringify(post))
+export const getKeyForPost = post => post.id
 
 const withRenderedMarkdown = post => {
+  if (!post.content) {
+    return post
+  }
+
   // parse this as markdown/ html
   const { title, content, ...rest } = post
   const tokens = new marked.Lexer().lex(content.join("\n"))
@@ -63,12 +84,24 @@ const withRenderedMarkdown = post => {
   }
 }
 
+const conformServerResponse = response =>
+  response.posts
+    .map(post => ({
+      ...post,
+      content: post.content ? post.content.split(response.newline) : null
+    }))
+    .reduce((posts, post) => ({ ...posts, [post.id]: post }), {})
+
 export default handleActions(
   {
     [POST_CREATE]: (state, action) => {
       const existingPosts = _.get(state, "posts", {})
 
       let post = action.payload
+
+      if (!post.id) {
+        return
+      }
 
       if (_.get(post, "meta.extension") === "md") {
         post = withRenderedMarkdown(post)
@@ -88,14 +121,14 @@ export default handleActions(
       return {
         ...state,
         posts: {
-          ..._.omit(existingPosts, action.payload.postId)
+          ..._.omit(existingPosts, action.payload.id)
         }
       }
     },
     [POST_UPDATE]: (state, action) => {
       const existingPosts = _.get(state, "posts", {})
 
-      const postKey = action.payload.postId
+      const postKey = action.payload.id
       const existingPost = existingPosts[postKey]
       const newPost = withRenderedMarkdown({
         ...existingPost,
@@ -109,20 +142,11 @@ export default handleActions(
         posts: withUpdatedPost
       }
     },
-    [POST_GET_CONTENT_DONE]: (state, action) => {
-      const storeKey = action.error ? "errors" : "posts"
-
-      const existingPosts = _.get(state, storeKey, {})
-
-      const postKey = getKeyForPost(action.payload)
-
-      if (existingPosts[postKey]) {
-        return state
-      }
-
+    [POST_GET_ALL_RESPONSE]: (state, action) => {
       return {
         ...state,
-        [storeKey]: { ...existingPosts, [postKey]: action.payload }
+        posts: conformServerResponse(action.payload),
+        errors: { ...state.errors, ...action.errors }
       }
     }
   },
@@ -258,17 +282,6 @@ export const postsEpic = combineEpics(
           }))
           // only accept posts with titles
           .filter(({ title }) => title)
-          .map(({ title, content, ...rest }) => {
-            let withLinks = [...content]
-            withLinks.links = tokens.links
-
-            return {
-              title,
-              content: content.join,
-              html: parser.parse(withLinks),
-              ...rest
-            }
-          })
           .map(postGetContentDone)
 
         return from(byHeader)
@@ -284,6 +297,71 @@ export const postsEpic = combineEpics(
         from(parsePostsFromTextBody(action.payload)).pipe(
           map(postGetContentDone)
         )
+      )
+    ),
+
+  // postGetContentDone -> server
+  action$ =>
+    action$.pipe(
+      ofType(postGetContentDone),
+      map(action => postCreate(action.payload))
+    ),
+
+  // postCreate
+  action$ =>
+    action$.pipe(
+      ofType(POST_CREATE),
+      filter(post => !post.id),
+      mergeMap(action =>
+        ajax
+          .post(
+            `${config.API_BASE_URL}/post`,
+            { post: action.payload },
+            { "Content-Type": "application/json" }
+          )
+          .pipe(
+            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response }))
+          )
+      )
+    ),
+
+  // postGet
+  action$ =>
+    action$.pipe(
+      ofType(POST_GET),
+      mergeMap(action =>
+        ajax
+          .get(`${config.API_BASE_URL}/post`, action.payload, {
+            "Content-Type": "application/json"
+          })
+          .pipe(map(r => ({ type: "POST_GET_RESPONSE", payload: r.response })))
+      )
+    ),
+
+  // polling for posts
+  action$ =>
+    action$.pipe(
+      ofType(POLL_START),
+      switchMap(_ =>
+        timer(0, 5000).pipe(
+          takeUntil(action$.ofType(POLL_STOP)),
+          map(_ => postGetAll())
+        )
+      )
+    ),
+
+  // postGetAll
+  action$ =>
+    action$.pipe(
+      ofType(POST_GET_ALL),
+      mergeMap(action =>
+        ajax
+          .get(`${config.API_BASE_URL}/post`, action.payload, {
+            "Content-Type": "application/json"
+          })
+          .pipe(
+            map(r => ({ type: POST_GET_ALL_RESPONSE, payload: r.response }))
+          )
       )
     )
 )

@@ -49,8 +49,5 @@ BlogPosts.propTypes = {
 }
 
 export default connect(state => ({
-  posts: Object.keys(state.posts.posts).map(k => ({
-    id: k,
-    ...state.posts.posts[k]
-  }))
+  posts: Object.values(state.posts.posts)
 }))(BlogPosts)

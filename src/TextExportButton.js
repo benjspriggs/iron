@@ -8,7 +8,9 @@ import { postType } from "./BlogPost"
 
 const formatPostForTextExport = post =>
   `${post.title} (by ${post.source})\n${
-    post.content !== undefined && typeof post.content.join === "function"
+    post.content !== undefined &&
+    post.content !== null &&
+    typeof post.content.join === "function"
       ? post.content.join("\n")
       : ""
   }\n\n`
