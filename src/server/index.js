@@ -33,11 +33,14 @@ console.log("Database configuration :::", config)
 
 const app = express()
 
+app.use(require("cors")())
+
 // routes
 
 const port = process.env.PORT || 5000
 
 app.post("/post", (req, res, next) => {
+  console.dir(req.body)
   knex("posts")
     .insert(req.body)
     .then(rows => res.send(rows))
