@@ -2,14 +2,7 @@
 // blobs into posts
 import { from, timer } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import {
-  tap,
-  filter,
-  map,
-  switchMap,
-  mergeMap,
-  takeUntil
-} from "rxjs/operators"
+import { filter, map, switchMap, mergeMap, takeUntil } from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
