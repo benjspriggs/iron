@@ -11,9 +11,6 @@ import _ from "lodash"
 
 import { octokit } from "./github"
 
-export const lexer = new marked.Lexer()
-export const parser = new marked.Parser()
-
 const config = {
   // TODO: make configurable
   API_BASE_URL: "http://localhost:5000"
@@ -260,13 +257,14 @@ export const postsEpic = combineEpics(
       ofType(POST_CONVERT_CONTENT_DONE),
       filter(action => action.payload.meta.extension === "md"),
       mergeMap(action => {
-        const tokens = lexer.lex(action.payload.content)
+        // TODO: find portable way to split on newline
+        const lines = action.payload.content.split("\n")
         const { owner } = action.payload.meta
 
-        const byHeader = tokens
+        const byHeader = lines
           .reduce(
             ([latestPost, ...allButLatest], t) => {
-              if (t.type === "heading") {
+              if (t.startsWith("#")) {
                 return [[t], latestPost, ...allButLatest]
               } else {
                 return [[...latestPost, t], ...allButLatest]
@@ -274,7 +272,7 @@ export const postsEpic = combineEpics(
             },
             [[]]
           )
-          .filter(post => post.length > 0)
+          .filter(post => post.length > 1)
           .map(([header, ...content]) => ({
             title: header.text,
             content: content,
@@ -320,7 +318,8 @@ export const postsEpic = combineEpics(
             { "Content-Type": "application/json" }
           )
           .pipe(
-            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response }))
+            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response })),
+            map(action => postGet(action.payload.id))
           )
       )
     ),
@@ -361,6 +360,36 @@ export const postsEpic = combineEpics(
           })
           .pipe(
             map(r => ({ type: POST_GET_ALL_RESPONSE, payload: r.response }))
+          )
+      )
+    ),
+
+  // postUpdate
+  action$ =>
+    action$.pipe(
+      ofType(POST_UPDATE),
+      mergeMap(action =>
+        ajax
+          .put(
+            `${config.API_BASE_URL}/post`,
+            { post: action.payload },
+            { "Content-Type": "application/json" }
+          )
+          .pipe(
+            map(r => ({ type: "POST_UPDATE_RESPONSE", payload: r.response }))
+          )
+      )
+    ),
+
+  // postDelete
+  action$ =>
+    action$.pipe(
+      ofType(POST_DELETE),
+      mergeMap(action =>
+        ajax
+          .delete(`${config.API_BASE_URL}/post?id=${action.payload.id}`)
+          .pipe(
+            map(r => ({ type: "POST_DELETE_RESPONSE", payload: r.response }))
           )
       )
     )
