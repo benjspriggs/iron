@@ -1,4 +1,6 @@
 const express = require("express")
+const _ = require("lodash")
+
 const config = {
   filename: "./data.db"
 }
@@ -33,6 +35,9 @@ console.log("Database configuration :::", config)
 
 const app = express()
 
+// use json encoded bodies
+app.use(express.json())
+// use CORS
 app.use(require("cors")())
 
 // routes
@@ -40,17 +45,20 @@ app.use(require("cors")())
 const port = process.env.PORT || 5000
 
 app.post("/post", (req, res, next) => {
-  console.dir(req.body)
+  const { title, content, source, date } = req.body.post
+
   knex("posts")
-    .insert(req.body)
-    .then(rows => res.send(rows))
+    .insert({ title, content: content.join("\n"), source, date })
+    .then(([rowId]) => res.send({ rowId, title, content, source, date }))
     .catch(next)
 })
 
 app.get("/post", (req, res, next) => {
+  const query = _.isEmpty(req.query) ? req.body : req.query
+
   knex("posts")
-    .where(req.query)
-    .then(rows => res.send(rows))
+    .where(query)
+    .then(rows => res.send({ rows, query }))
     .catch(next)
 })
 

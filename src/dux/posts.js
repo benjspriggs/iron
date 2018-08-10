@@ -2,13 +2,12 @@
 // blobs into posts
 import { from } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import { tap, filter, map, mergeMap, catchError } from "rxjs/operators"
+import { filter, map, mergeMap } from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
 import { decode } from "base-64"
 import _ from "lodash"
-import md5 from "md5"
 
 import { octokit } from "./github"
 
@@ -304,10 +303,28 @@ export const postsEpic = combineEpics(
       ofType(POST_CREATE),
       filter(post => !post.postId),
       mergeMap(action =>
-        ajax.post({
-          url: `${config.API_BASE_URL}/post`,
-          body: JSON.stringify(action.payload)
-        })
+        ajax
+          .post(
+            `${config.API_BASE_URL}/post`,
+            { post: action.payload },
+            { "Content-Type": "application/json" }
+          )
+          .pipe(
+            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response }))
+          )
+      )
+    ),
+
+  // postGet
+  action$ =>
+    action$.pipe(
+      ofType(POST_GET),
+      mergeMap(action =>
+        ajax
+          .get(`${config.API_BASE_URL}/post`, action.payload, {
+            "Content-Type": "application/json"
+          })
+          .pipe(map(r => ({ type: "POST_GET_RESPONSE", payload: r.response })))
       )
     )
 )
