@@ -64,10 +64,6 @@ export const {
 export const getKeyForPost = post => post.id
 
 const withRenderedMarkdown = post => {
-  if (!post.content) {
-    return post
-  }
-
   // parse this as markdown/ html
   const { title, content, ...rest } = post
   const tokens = new marked.Lexer().lex(content.join("\n"))
@@ -274,9 +270,11 @@ export const postsEpic = combineEpics(
           )
           .filter(post => post.length > 1)
           .map(([header, ...content]) => ({
-            title: header.text,
-            content: content,
-            source: owner
+            // strip the header and add the owner
+            title: header.replace(/^#+\s+/g, ""),
+            content: [header, ...content],
+            source: owner,
+            meta: action.payload.meta
           }))
           // only accept posts with titles
           .filter(({ title }) => title)
@@ -309,7 +307,7 @@ export const postsEpic = combineEpics(
   action$ =>
     action$.pipe(
       ofType(POST_CREATE),
-      filter(post => !post.id),
+      filter(action => !action.payload.id),
       mergeMap(action =>
         ajax
           .post(
@@ -330,9 +328,7 @@ export const postsEpic = combineEpics(
       ofType(POST_GET),
       mergeMap(action =>
         ajax
-          .get(`${config.API_BASE_URL}/post`, action.payload, {
-            "Content-Type": "application/json"
-          })
+          .get(`${config.API_BASE_URL}/post?id=${action.payload.id}`)
           .pipe(map(r => ({ type: "POST_GET_RESPONSE", payload: r.response })))
       )
     ),
@@ -342,7 +338,7 @@ export const postsEpic = combineEpics(
     action$.pipe(
       ofType(POLL_START),
       switchMap(_ =>
-        timer(0, 5000).pipe(
+        timer(0, 2500).pipe(
           takeUntil(action$.ofType(POLL_STOP)),
           map(_ => postGetAll())
         )

@@ -56,7 +56,7 @@ const handleErr = res => err => {
 }
 
 app.post("/post", (req, res) => {
-  const { title, content, source, date, meta } = req.body.post
+  const { title, content, source, date, meta, html } = req.body.post
 
   knex("posts")
     .insert({
@@ -64,9 +64,10 @@ app.post("/post", (req, res) => {
       meta: JSON.stringify(meta),
       content: content ? content.join(newline) : content,
       source,
-      date
+      date,
+      html
     })
-    .then(([id]) => res.send({ id, title, content, source, date, meta }))
+    .then(([id]) => res.send({ id, title, content, source, date, meta, html }))
     .catch(handleErr(res))
 })
 
@@ -83,7 +84,7 @@ app.put("/post", (req, res, next) => {
 app.get("/post", (req, res, next) => {
   const query = !_.isEmpty(req.query)
     ? req.query
-    : _.isEmpty(req.body)
+    : !_.isEmpty(req.body)
       ? req.body
       : true
 
