@@ -44,21 +44,27 @@ app.use(require("cors")())
 
 const port = process.env.PORT || 5000
 
+const newline = "\n"
+
 app.post("/post", (req, res, next) => {
   const { title, content, source, date } = req.body.post
 
   knex("posts")
-    .insert({ title, content: content.join("\n"), source, date })
+    .insert({ title, content: content.join(newline), source, date })
     .then(([rowId]) => res.send({ rowId, title, content, source, date }))
     .catch(next)
 })
 
 app.get("/post", (req, res, next) => {
-  const query = _.isEmpty(req.query) ? req.body : req.query
+  const query = !_.isEmpty(req.query)
+    ? req.query
+    : _.isEmpty(req.body)
+      ? req.body
+      : true
 
   knex("posts")
     .where(query)
-    .then(rows => res.send({ rows, query }))
+    .then(posts => res.send({ posts, query, newline }))
     .catch(next)
 })
 

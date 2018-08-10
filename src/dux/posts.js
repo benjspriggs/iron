@@ -1,8 +1,15 @@
 // Provides epics, etc for translating
 // blobs into posts
-import { from } from "rxjs"
+import { from, timer } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import { filter, map, mergeMap } from "rxjs/operators"
+import {
+  tap,
+  filter,
+  map,
+  switchMap,
+  mergeMap,
+  takeUntil
+} from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
@@ -29,6 +36,10 @@ export const POST_CREATE = "POST_CREATE"
 export const POST_DELETE = "POST_DELETE"
 export const POST_UPDATE = "POST_UPDATE"
 export const POST_GET = "POST_GET"
+export const POST_GET_ALL = "POST_GET_ALL"
+export const POST_GET_ALL_RESPONSE = "POST_GET_ALL_RESPONSE"
+export const POLL_START = "POLL_START"
+export const POLL_STOP = "POLL_STOP"
 
 export const {
   postGetContent,
@@ -40,7 +51,10 @@ export const {
   postCreate,
   postDelete,
   postUpdate,
-  postGet
+  postGet,
+  postGetAll,
+  pollStart,
+  pollStop
 } = createActions({
   [POST_GET_CONTENT]: any => any,
   [POST_CONVERT_CONTENT]: any => any,
@@ -51,7 +65,10 @@ export const {
   [POST_CREATE]: any => ({ ...any }),
   [POST_DELETE]: postId => ({ postId }),
   [POST_UPDATE]: (postId, updates) => ({ postId, ...updates }),
-  [POST_GET]: postId => ({ postId })
+  [POST_GET]: postId => ({ postId }),
+  [POST_GET_ALL]: null,
+  [POLL_START]: null,
+  [POLL_STOP]: null
 })
 
 export const getKeyForPost = post => post.postId
@@ -69,6 +86,11 @@ const withRenderedMarkdown = post => {
     html: new marked.Parser().parse(withLinks)
   }
 }
+
+const conformServerResponse = response =>
+  response.posts
+    .map(post => ({ ...post, content: post.content.split(response.newline) }))
+    .map(withRenderedMarkdown)
 
 export default handleActions(
   {
@@ -134,6 +156,12 @@ export default handleActions(
       return {
         ...state,
         [storeKey]: { ...existingPosts, [postKey]: action.payload }
+      }
+    },
+    [POST_GET_ALL_RESPONSE]: (state, action) => {
+      return {
+        ...state,
+        posts: conformServerResponse(action.payload)
       }
     }
   },
@@ -326,6 +354,33 @@ export const postsEpic = combineEpics(
             "Content-Type": "application/json"
           })
           .pipe(map(r => ({ type: "POST_GET_RESPONSE", payload: r.response })))
+      )
+    ),
+
+  // polling for posts
+  action$ =>
+    action$.pipe(
+      ofType(POLL_START),
+      switchMap(_ =>
+        timer(0, 5000).pipe(
+          takeUntil(action$.ofType(POLL_STOP)),
+          map(_ => postGetAll())
+        )
+      )
+    ),
+
+  // postGetAll
+  action$ =>
+    action$.pipe(
+      ofType(POST_GET_ALL),
+      mergeMap(action =>
+        ajax
+          .get(`${config.API_BASE_URL}/post`, action.payload, {
+            "Content-Type": "application/json"
+          })
+          .pipe(
+            map(r => ({ type: POST_GET_ALL_RESPONSE, payload: r.response }))
+          )
       )
     )
 )

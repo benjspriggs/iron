@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import logo from "./logo.svg"
 import PostsPage from "./PostsPage"
 import SettingsPage from "./SettingsPage"
@@ -19,7 +20,14 @@ import { Link } from "react-router-dom"
 import "./App.css"
 
 class App extends Component {
+  componentDidMount() {
+    const { onPostsPageEnter } = this.props
+    onPostsPageEnter()
+  }
+
   render() {
+    const { onPostsPageEnter } = this.props
+
     return (
       <Container>
         <Header as="h1" attached="top">
@@ -56,6 +64,10 @@ class App extends Component {
       </Container>
     )
   }
+}
+
+App.propTypes = {
+  onPostsPageEnter: PropTypes.func.isRequired
 }
 
 export default App
