@@ -29,6 +29,7 @@ createIfNotExists("posts", t => {
   t.date("date", 150)
 
   t.text("content")
+  t.text("html")
 })
 
 console.log("Database configuration :::", config)
@@ -47,10 +48,16 @@ const port = process.env.PORT || 5000
 const newline = "\n"
 
 app.post("/post", (req, res, next) => {
-  const { title, content, source, date } = req.body.post
+  const { title, content, source, date, html } = req.body.post
 
   knex("posts")
-    .insert({ title, content: content.join(newline), source, date })
+    .insert({
+      title,
+      html,
+      content: content ? content.join(newline) : content,
+      source,
+      date
+    })
     .then(([rowId]) => res.send({ rowId, title, content, source, date }))
     .catch(next)
 })
