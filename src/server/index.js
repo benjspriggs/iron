@@ -30,6 +30,7 @@ createIfNotExists("posts", t => {
 
   t.text("content")
   t.text("html")
+  t.text("meta")
 })
 
 console.log("Database configuration :::", config)
@@ -47,18 +48,20 @@ const port = process.env.PORT || 5000
 
 const newline = "\n"
 
+const deserializePost = post => ({ ...post, meta: JSON.parse(post.meta) })
+
 app.post("/post", (req, res, next) => {
-  const { title, content, source, date, html } = req.body.post
+  const { title, content, source, date, meta } = req.body.post
 
   knex("posts")
     .insert({
       title,
-      html,
+      meta: JSON.stringify(meta),
       content: content ? content.join(newline) : content,
       source,
       date
     })
-    .then(([id]) => res.send({ id, title, content, source, date, html }))
+    .then(([id]) => res.send({ id, title, content, source, date, meta }))
     .catch(next)
 })
 
@@ -71,7 +74,9 @@ app.get("/post", (req, res, next) => {
 
   knex("posts")
     .where(query)
-    .then(posts => res.send({ posts, query, newline }))
+    .then(posts =>
+      res.send({ posts: posts.map(deserializePost), query, newline })
+    )
     .catch(next)
 })
 
