@@ -90,7 +90,6 @@ const conformServerResponse = response =>
       ...post,
       content: post.content ? post.content.split(response.newline) : null
     }))
-    .map(withRenderedMarkdown)
     .reduce((posts, post) => ({ ...posts, [post.id]: post }), {})
 
 export default handleActions(
