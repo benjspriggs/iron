@@ -15,6 +15,7 @@ export const lexer = new marked.Lexer()
 export const parser = new marked.Parser()
 
 const config = {
+  // TODO: make configurable
   API_BASE_URL: "http://localhost:5000"
 }
 
