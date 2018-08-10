@@ -16,7 +16,7 @@ const EnhancedBlogPost = (post, id) => (
         icon
         labelPosition="left"
         as={Link}
-        to={`/view/${post.postId}`}
+        to={`/view/${post.id}`}
       >
         <Icon name="eye" />
         View

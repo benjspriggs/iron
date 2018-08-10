@@ -56,15 +56,15 @@ export const {
   [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, data }) => ({ owner, repo, data }),
   [POST_GET_CONTENT_DATE]: any => any,
   [POST_CREATE]: any => ({ ...any }),
-  [POST_DELETE]: postId => ({ postId }),
-  [POST_UPDATE]: (postId, updates) => ({ postId, ...updates }),
-  [POST_GET]: postId => ({ postId }),
+  [POST_DELETE]: id => ({ id }),
+  [POST_UPDATE]: (id, updates) => ({ id, ...updates }),
+  [POST_GET]: id => ({ id }),
   [POST_GET_ALL]: null,
   [POLL_START]: null,
   [POLL_STOP]: null
 })
 
-export const getKeyForPost = post => post.postId
+export const getKeyForPost = post => post.id
 
 const withRenderedMarkdown = post => {
   if (!post.content) {
@@ -91,6 +91,7 @@ const conformServerResponse = response =>
       content: post.content ? post.content.split(response.newline) : null
     }))
     .map(withRenderedMarkdown)
+    .reduce((posts, post) => ({ ...posts, [post.id]: post }), {})
 
 export default handleActions(
   {
@@ -99,7 +100,7 @@ export default handleActions(
 
       let post = action.payload
 
-      if (!post.postId) {
+      if (!post.id) {
         return
       }
 
@@ -121,14 +122,14 @@ export default handleActions(
       return {
         ...state,
         posts: {
-          ..._.omit(existingPosts, action.payload.postId)
+          ..._.omit(existingPosts, action.payload.id)
         }
       }
     },
     [POST_UPDATE]: (state, action) => {
       const existingPosts = _.get(state, "posts", {})
 
-      const postKey = action.payload.postId
+      const postKey = action.payload.id
       const existingPost = existingPosts[postKey]
       const newPost = withRenderedMarkdown({
         ...existingPost,
@@ -282,17 +283,6 @@ export const postsEpic = combineEpics(
           }))
           // only accept posts with titles
           .filter(({ title }) => title)
-          .map(({ title, content, ...rest }) => {
-            let withLinks = [...content]
-            withLinks.links = tokens.links
-
-            return {
-              title,
-              content: content.join,
-              html: parser.parse(withLinks),
-              ...rest
-            }
-          })
           .map(postGetContentDone)
 
         return from(byHeader)
@@ -322,7 +312,7 @@ export const postsEpic = combineEpics(
   action$ =>
     action$.pipe(
       ofType(POST_CREATE),
-      filter(post => !post.postId),
+      filter(post => !post.id),
       mergeMap(action =>
         ajax
           .post(
