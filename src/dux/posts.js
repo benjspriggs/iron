@@ -149,28 +149,11 @@ export default handleActions(
         posts: withUpdatedPost
       }
     },
-    [POST_GET_CONTENT_DONE]: (state, action) => {
-      // TODO: remove
-      return state
-      const storeKey = action.error ? "errors" : "posts"
-
-      const existingPosts = _.get(state, storeKey, {})
-
-      const postKey = getKeyForPost(action.payload)
-
-      if (existingPosts[postKey]) {
-        return state
-      }
-
-      return {
-        ...state,
-        [storeKey]: { ...existingPosts, [postKey]: action.payload }
-      }
-    },
     [POST_GET_ALL_RESPONSE]: (state, action) => {
       return {
         ...state,
-        posts: conformServerResponse(action.payload)
+        posts: conformServerResponse(action.payload),
+        errors: { ...state.errors, ...action.errors }
       }
     }
   },
