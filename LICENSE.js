@@ -1,5 +1,6 @@
 /**
- * @license
+ * MIT License
+ *
  * Copyright (c) 2018 Benjamin Spriggs
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
