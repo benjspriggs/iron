@@ -65,9 +65,18 @@ export const getKeyForPost = post => post.id
 
 const withRenderedMarkdown = post => {
   // parse this as markdown/ html
-  const { title, content, ...rest } = post
+  const { content, ...rest } = post
   const tokens = new marked.Lexer().lex(content.join("\n"))
+  let title = post.title
   let withLinks = [...tokens]
+
+  if (_.get(post, "meta.extension") === "md") {
+    let header = tokens[0]
+
+    if (header.type === "heading") {
+      title = header.text
+    }
+  }
   withLinks.links = tokens.links
   return {
     ...rest,
