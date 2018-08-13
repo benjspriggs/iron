@@ -45,8 +45,7 @@
     "eject": "react-scripts eject",
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
-    "prepush": "pretty-quick && npm run licensecheck",
-    "licensecheck": "license-check"
+    "prepush": "pretty-quick"
   },
   "license": "MIT",
   "repository": {
@@ -57,21 +56,10 @@
     "enzyme": "^3.3.0",
     "eslint-plugin-prettier": "^2.6.2",
     "husky": "^0.14.3",
-    "license-check": "^1.1.5",
     "lorem-ipsum": "^1.0.5",
     "prettier": "^1.13.7",
     "pretty-quick": "^1.6.0",
     "react-generate-props": "^0.3.0",
     "redux-devtools-extension": "^2.13.5"
-  },
-  "license-check-config": {
-    "src": [
-      "src/**/*.js",
-      "!./node_modules/**/*"
-    ],
-    "path": "LICENSE.js",
-    "blocking": false,
-    "logInfo": false,
-    "logError": true
   }
 }
