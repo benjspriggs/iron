@@ -34,8 +34,7 @@ import _ from "lodash"
 import { stringify } from "query-string-es5"
 
 const config = {
-  // TODO: make configurable
-  API_BASE_URL: "http://localhost:5000"
+  API_BASE_URL: process.env.API_BASE_URL || "https://localhost:5000"
 }
 
 export const POST_GET_CONTENT = "POST_GET_CONTENT"
