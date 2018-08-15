@@ -118,13 +118,16 @@ export default handleActions(
   {
     POST_GET_RESPONSE: (state, action) => {
       const existingPosts = _.get(state, "posts", {})
+
+      if (action.payload === null) return state
+
       let posts = conformServerResponse(action.payload)
       let {
         query: { id }
       } = action.payload
 
       if (!id) {
-        return
+        return state
       }
 
       let post = updateHTMLForPost(posts[id])
@@ -165,6 +168,10 @@ export default handleActions(
       }
     },
     [POST_GET_ALL_RESPONSE]: (state, action) => {
+      if (action.payload === null) {
+        return state
+      }
+
       return {
         ...state,
         posts: conformServerResponse(action.payload),
@@ -200,13 +207,13 @@ export const parsePostsFromTextBody = ({ meta, _links, content }) =>
 
 export const postsEpic = combineEpics(
   // postLoadAllFromRepo -> postGetContent
-  (action$, store) =>
+  (action$, state$) =>
     action$.pipe(
       ofType(POST_LOAD_ALL_FROM_REPO),
       mergeMap(action =>
         ajax
           .getJSON(
-            `${store.getState().config.API_BASE_URL}/github?${stringify(
+            `${state$.value.config.API_BASE_URL}/github?${stringify(
               action.payload
             )}`
           )
@@ -301,14 +308,14 @@ export const postsEpic = combineEpics(
     ),
 
   // postCreate
-  (action$, store) =>
+  (action$, state$) =>
     action$.pipe(
       ofType(POST_CREATE),
       filter(action => !action.payload.id),
       mergeMap(action =>
         ajax
           .post(
-            `${store.getState().API_BASE_URL}/post`,
+            `${state$.value.API_BASE_URL}/post`,
             { post: updateHTMLForPost(action.payload) },
             { "Content-Type": "application/json" }
           )
@@ -319,12 +326,12 @@ export const postsEpic = combineEpics(
     ),
 
   // postGet
-  (action$, store) =>
+  (action$, state$) =>
     action$.pipe(
       ofType(POST_GET),
       mergeMap(action =>
         ajax
-          .get(`${store.getState().API_BASE_URL}/post?id=${action.payload.id}`)
+          .get(`${state$.value.API_BASE_URL}/post?id=${action.payload.id}`)
           .pipe(map(r => ({ type: "POST_GET_RESPONSE", payload: r.response })))
       )
     ),
@@ -342,12 +349,12 @@ export const postsEpic = combineEpics(
     ),
 
   // postGetAll
-  (action$, store) =>
+  (action$, state$) =>
     action$.pipe(
       ofType(POST_GET_ALL),
       mergeMap(action =>
         ajax
-          .get(`${store.getState().API_BASE_URL}/post`, action.payload, {
+          .get(`${state$.value.API_BASE_URL}/post`, action.payload, {
             "Content-Type": "application/json"
           })
           .pipe(
@@ -357,13 +364,13 @@ export const postsEpic = combineEpics(
     ),
 
   // postUpdate
-  (action$, store) =>
+  (action$, state$) =>
     action$.pipe(
       ofType(POST_UPDATE),
       mergeMap(action =>
         ajax
           .put(
-            `${store.getState().API_BASE_URL}/post`,
+            `${state$.value.API_BASE_URL}/post`,
             { post: action.payload },
             { "Content-Type": "application/json" }
           )
@@ -374,14 +381,12 @@ export const postsEpic = combineEpics(
     ),
 
   // postDelete
-  (action$, store) =>
+  (action$, state$) =>
     action$.pipe(
       ofType(POST_DELETE),
       mergeMap(action =>
         ajax
-          .delete(
-            `${store.getStore().API_BASE_URL}/post?id=${action.payload.id}`
-          )
+          .delete(`${state$.value.API_BASE_URL}/post?id=${action.payload.id}`)
           .pipe(
             map(r => ({ type: "POST_DELETE_RESPONSE", payload: r.response }))
           )

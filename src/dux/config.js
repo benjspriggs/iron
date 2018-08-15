@@ -28,7 +28,7 @@ const defaultConfig = {
 }
 
 export const { updateAPI } = createActions({
-  [UPDATE_API]: url => ({ url })
+  UPDATE_API: url => ({ url })
 })
 
 export default handleActions(
