@@ -27,13 +27,13 @@ const defaultConfig = {
   API_BASE_URL: process.env.API_BASE_URL || "https://localhost:5000"
 }
 
-export const { updateAPI } = createActions({
+export const { updateApi } = createActions({
   UPDATE_API: url => ({ url })
 })
 
 export default handleActions(
   {
-    [updateAPI]: (state, action) => {
+    [updateApi]: (state, action) => {
       return {
         ...state,
         API_BASE_URL: action.payload.url

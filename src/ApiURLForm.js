@@ -5,7 +5,7 @@ import * as yup from "yup"
 import { Form } from "semantic-ui-react"
 import { connect } from "react-redux"
 
-import { updateAPI } from "./dux/config"
+import { updateApi } from "./dux/config"
 
 import {
   FormField,
@@ -35,26 +35,30 @@ const ApiURLForm = props => {
     </Form>
   )
 }
+
+ApiURLForm.propTypes = {
+  update: PropTypes.func.isRequired
+}
+
 export default connect(
-  null,
+  state => ({ url: state.config.API_BASE_URL }),
   dispatch => ({
-    updateAPI: ({ url }) => {
-      dispatch(updateAPI(url))
+    update: ({ url }) => {
+      dispatch(updateApi(url))
     }
   })
 )(
   withFormik({
-    displayName: ApiURLForm.displayName,
-    mapPropsToValues: () => ({ uri: "" }),
+    displayName: "ApiURLForm",
     validationSchema: yup.object().shape({
-      uri: yup
+      url: yup
         .string()
-        .matches(/\S+\/\S+/)
+        .matches(/[^/]$/)
         .required()
     }),
-    handleSubmit: (values, { props: { updateAPI }, setSubmitting }) => {
+    handleSubmit: (values, { props: { update } }, setSubmitting) => {
       setSubmitting(true)
-      updateAPI(values)
+      update(values)
       setSubmitting(false)
     }
   })(ApiURLForm)

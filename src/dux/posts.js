@@ -23,15 +23,22 @@
  */
 // Provides epics, etc for translating
 // blobs into posts
-import { from, timer } from "rxjs"
+import { of, from, timer } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import { filter, map, switchMap, mergeMap, takeUntil } from "rxjs/operators"
+import {
+  catchError,
+  filter,
+  map,
+  switchMap,
+  mergeMap,
+  takeUntil
+} from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
 import { decode } from "base-64"
 import _ from "lodash"
-import { stringify } from "query-string-es5"
+import { stringify } from "query-string"
 
 export const POST_GET_CONTENT = "POST_GET_CONTENT"
 export const POST_CONVERT_CONTENT = "POST_CONVERT_CONTENT"
@@ -168,7 +175,7 @@ export default handleActions(
       }
     },
     [POST_GET_ALL_RESPONSE]: (state, action) => {
-      if (action.payload === null) {
+      if (action.payload === null || action.error) {
         return state
       }
 
@@ -204,6 +211,13 @@ export const parsePostsFromTextBody = ({ meta, _links, content }) =>
       content: [...rest],
       html: rest.map(r => `<p>${r}</p>`).join("")
     }))
+
+const respond = type => [
+  map(r => ({ type, payload: r.response })),
+  catchError(({ status, response }) =>
+    of({ type, payload: { status, response }, error: true })
+  )
+]
 
 export const postsEpic = combineEpics(
   // postLoadAllFromRepo -> postGetContent
@@ -315,13 +329,11 @@ export const postsEpic = combineEpics(
       mergeMap(action =>
         ajax
           .post(
-            `${state$.value.API_BASE_URL}/post`,
+            `${state$.value.config.API_BASE_URL}/post`,
             { post: updateHTMLForPost(action.payload) },
             { "Content-Type": "application/json" }
           )
-          .pipe(
-            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response }))
-          )
+          .pipe(...respond("POST_CREATE_RESPONSE"))
       )
     ),
 
@@ -331,7 +343,9 @@ export const postsEpic = combineEpics(
       ofType(POST_GET),
       mergeMap(action =>
         ajax
-          .get(`${state$.value.API_BASE_URL}/post?id=${action.payload.id}`)
+          .get(
+            `${state$.value.config.API_BASE_URL}/post?id=${action.payload.id}`
+          )
           .pipe(map(r => ({ type: "POST_GET_RESPONSE", payload: r.response })))
       )
     ),
@@ -354,12 +368,10 @@ export const postsEpic = combineEpics(
       ofType(POST_GET_ALL),
       mergeMap(action =>
         ajax
-          .get(`${state$.value.API_BASE_URL}/post`, action.payload, {
+          .get(`${state$.value.config.API_BASE_URL}/post`, action.payload, {
             "Content-Type": "application/json"
           })
-          .pipe(
-            map(r => ({ type: POST_GET_ALL_RESPONSE, payload: r.response }))
-          )
+          .pipe(...respond("POST_GET_ALL_RESPONSE"))
       )
     ),
 
@@ -370,7 +382,7 @@ export const postsEpic = combineEpics(
       mergeMap(action =>
         ajax
           .put(
-            `${state$.value.API_BASE_URL}/post`,
+            `${state$.value.config.API_BASE_URL}/post`,
             { post: action.payload },
             { "Content-Type": "application/json" }
           )
@@ -386,7 +398,9 @@ export const postsEpic = combineEpics(
       ofType(POST_DELETE),
       mergeMap(action =>
         ajax
-          .delete(`${state$.value.API_BASE_URL}/post?id=${action.payload.id}`)
+          .delete(
+            `${state$.value.config.API_BASE_URL}/post?id=${action.payload.id}`
+          )
           .pipe(
             map(r => ({ type: "POST_DELETE_RESPONSE", payload: r.response }))
           )
