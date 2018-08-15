@@ -21,55 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react"
-import PropTypes from "prop-types"
-import { Route, Switch } from "react-router"
-import { Link } from "react-router-dom"
-import { Container, Responsive, Button, Icon } from "semantic-ui-react"
-import { connect } from "react-redux"
+import { createActions, handleActions } from "redux-actions"
 
-import BlogPost from "./BlogPost"
-import NoMatch from "./NoMatch"
-
-const BlogPostFromId = connect(state => ({ posts: state.posts.posts }))(
-  props => {
-    const {
-      match: {
-        params: { id }
-      }
-    } = props
-
-    const post = props.posts[id]
-
-    if (post) {
-      return (
-        <Responsive as={Container}>
-          <BlogPost id={id} {...post} />
-          <Button icon labelPosition="left" as={Link} to={`/edit/${id}`}>
-            <Icon name="edit" />
-            Edit
-          </Button>
-        </Responsive>
-      )
-    } else {
-      return <NoMatch />
-    }
-  }
-)
-
-BlogPostFromId.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      id: PropTypes.string
-    })
-  })
+const defaultConfig = {
+  API_BASE_URL: process.env.API_BASE_URL || "https://localhost:5000"
 }
 
-const ViewPage = props => (
-  <Switch>
-    <Route exact path="/view" component={NoMatch} />
-    <Route path="/view/:id" component={BlogPostFromId} />
-  </Switch>
-)
+export const { updateApi } = createActions({
+  UPDATE_API: url => ({ url })
+})
 
-export default ViewPage
+export default handleActions(
+  {
+    [updateApi]: (state, action) => {
+      return {
+        ...state,
+        API_BASE_URL: action.payload.url
+      }
+    }
+  },
+  defaultConfig
+)

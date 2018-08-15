@@ -9,21 +9,29 @@
   "dependencies": {
     "@axetroy/react-download": "^1.1.1",
     "@octokit/rest": "^15.9.4",
+    "async-parallel": "^1.2.3",
     "base-64": "^0.1.0",
+    "concurrently": "^3.6.1",
     "connected-react-router": "^4.3.0",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "express": "^4.16.3",
     "formik": "^0.11.11",
     "history": "^4.7.2",
+    "knex": "^0.15.2",
     "marked": "^0.4.0",
     "md5": "^2.2.1",
+    "nodemon": "^1.18.3",
     "prop-types": "^15.6.2",
+    "query-string": "^6.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-lazy-load": "^3.0.13",
     "react-redux": "^5.0.7",
     "react-render-html": "^0.6.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.0.0-next.3e165448",
     "react-test-renderer": "^16.4.1",
     "redux": "^4.0.0",
     "redux-actions": "^2.4.0",
@@ -36,6 +44,7 @@
     "semantic-ui-calendar-react": "^0.7.1",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-react": "^0.81.3",
+    "sqlite": "^2.9.2",
     "yup": "^0.25.1"
   },
   "scripts": {
@@ -45,7 +54,8 @@
     "eject": "react-scripts eject",
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
-    "prepush": "pretty-quick"
+    "prepush": "pretty-quick",
+    "serve": "serve -s build"
   },
   "license": "MIT",
   "repository": {
@@ -61,5 +71,17 @@
     "pretty-quick": "^1.6.0",
     "react-generate-props": "^0.3.0",
     "redux-devtools-extension": "^2.13.5"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
+    ]
   }
 }

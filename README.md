@@ -45,9 +45,12 @@ And have content like this
 
 If you want to see how it looks, click the 'Deploy to Heroku' button and Heroku will take care of the rest.
 
+Make sure that your browser is pointed at the right backend by changing the 'Settings -> Backend URL' to an instance of [the backend for this application](https://github.com/benjspriggs/iron-backend).
+
 For getting started locally:
 
-1.  download/install [node.js](http://nodejs.org/)
+1.  download/install [node.js](http://nodejs.org/), or use nvm
+1.  install [iron-backend](https://github.com/benjspriggs/iron-backend) according to that readme.
 1.  install dependencies: `npm install`
 1.  run it: `npm start`
 1.  open http://localhost:3000 in a browser

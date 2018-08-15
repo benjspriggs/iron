@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import logo from "./logo.svg"
 import PostsPage from "./PostsPage"
 import SettingsPage from "./SettingsPage"
@@ -42,9 +43,19 @@ import { Link } from "react-router-dom"
 import "./App.css"
 
 class App extends Component {
+  componentDidMount() {
+    const { onPostsPageEnter } = this.props
+    onPostsPageEnter()
+  }
+
+  componentWillUnmount() {
+    const { onPostsPageExit } = this.props
+    onPostsPageExit()
+  }
+
   render() {
     return (
-      <Container>
+      <Container fluid>
         <Header as="h1" attached="top">
           <Image src={logo} className="App-logo" alt="logo" />
           iron
@@ -66,7 +77,7 @@ class App extends Component {
 
         <Divider hidden />
 
-        <Container>
+        <Container fluid>
           <Switch>
             <Route exact path="/" component={PostsPage} />
             <Route exact path="/settings" component={SettingsPage} />
@@ -79,6 +90,11 @@ class App extends Component {
       </Container>
     )
   }
+}
+
+App.propTypes = {
+  onPostsPageEnter: PropTypes.func.isRequired,
+  onPostsPageExit: PropTypes.func.isRequired
 }
 
 export default App
