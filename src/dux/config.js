@@ -21,18 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { combineReducers } from "redux"
-import github, { githubEpic } from "./github"
-import posts, { postsEpic } from "./posts"
-import edit from "./edit"
-import config from "./config"
-import { combineEpics } from "redux-observable"
+import { createActions, handleActions } from "redux-actions"
 
-export default combineReducers({
-  github: github,
-  posts: posts,
-  edit: edit,
-  config: config
+const defaultConfig = {
+  API_BASE_URL: process.env.API_BASE_URL || "https://localhost:5000"
+}
+
+export const { updateAPI } = createActions({
+  [UPDATE_API]: url => ({ url })
 })
 
-export const rootEpic = combineEpics(githubEpic, postsEpic)
+export default handleActions(
+  {
+    [updateAPI]: (state, action) => {
+      return {
+        ...state,
+        API_BASE_URL: action.payload.url
+      }
+    }
+  },
+  defaultConfig
+)
