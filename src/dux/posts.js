@@ -88,13 +88,13 @@ export const getKeyForPost = post => post.id
 
 const withRenderedMarkdown = post => {
   // parse this as markdown/ html
-  const { title, content, ...rest } = post
+  const { content, ...rest } = post
   const tokens = new marked.Lexer().lex(content.join("\n"))
   let withLinks = [...tokens]
   withLinks.links = tokens.links
+
   return {
     ...rest,
-    title,
     content,
     html: new marked.Parser().parse(withLinks)
   }
@@ -343,12 +343,11 @@ export const postsEpic = combineEpics(
         ajax
           .post(
             `${config.API_BASE_URL}/post`,
-            { post: action.payload },
+            { post: withRenderedMarkdown(action.payload) },
             { "Content-Type": "application/json" }
           )
           .pipe(
-            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response })),
-            map(action => postGet(action.payload.id))
+            map(r => ({ type: "POST_CREATE_RESPONSE", payload: r.response }))
           )
       )
     ),
