@@ -31,8 +31,7 @@ import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
 import { decode } from "base-64"
 import _ from "lodash"
-
-import { octokit } from "./github"
+import { stringify } from "query-string"
 
 const config = {
   // TODO: make configurable
@@ -73,7 +72,12 @@ export const {
   [POST_CONVERT_CONTENT]: any => any,
   [POST_CONVERT_CONTENT_DONE]: null,
   [POST_GET_CONTENT_DONE]: any => any,
-  [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, data }) => ({ owner, repo, data }),
+  [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, path = "/", ref }) => ({
+    owner,
+    repo,
+    path,
+    ref
+  }),
   [POST_GET_CONTENT_DATE]: any => any,
   [POST_CREATE]: any => ({ ...any }),
   [POST_DELETE]: id => ({ id }),
@@ -205,27 +209,15 @@ export const postsEpic = combineEpics(
     action$.pipe(
       ofType(POST_LOAD_ALL_FROM_REPO),
       mergeMap(action =>
-        action.payload.data
-          // only include files or directories
-          .filter(d => ["file", "dir"].includes(d.type))
-          .map(d => ({ ...d, extension: d.name.split(".").pop() }))
-          // only use markdown or text files
-          .filter(d => ["md", "txt"].includes(d.extension))
-          .map(d => {
-            switch (d.type) {
-              case "file":
-                // get the content for this file
-                return postGetContent({ ...action.payload, ...d })
-              default:
-                // get all the content in this directory
-                return from(
-                  octokit.repos.getContent({
-                    ...action.payload,
-                    ...d
-                  })
-                ).pipe(postGetContent)
-            }
-          })
+        ajax
+          .getJSON(`${config.API_BASE_URL}/github?${stringify(action.payload)}`)
+          .pipe(
+            mergeMap(response =>
+              from(response.data).pipe(
+                map(datum => postGetContent({ ...datum, meta: action.payload }))
+              )
+            )
+          )
       )
     ),
 
@@ -250,30 +242,6 @@ export const postsEpic = combineEpics(
       ofType(POST_CONVERT_CONTENT),
       map(({ payload: { content, ...rest } }) =>
         postConvertContentDone({ content: decode(content), ...rest })
-      )
-    ),
-
-  // postGetContentDate -> postConvertContentDone
-  // TODO: link repo date with actual date
-  action$ =>
-    action$.pipe(
-      ofType(POST_GET_CONTENT_DATE),
-      mergeMap(action =>
-        from(
-          octokit.repos.getCommit({
-            owner: action.payload.meta.owner,
-            repo: action.payload.meta.repo,
-            sha: action.payload.sha
-          })
-        ).pipe(
-          map(response =>
-            postConvertContentDone({
-              ...action.payload,
-              date: response.author.date,
-              source: response.author.name
-            })
-          )
-        )
       )
     ),
 
