@@ -133,7 +133,11 @@ const getContentForParams = async params =>
       data
         // only include files or directories
         .filter(d => ["file", "dir"].includes(d.type))
-        .map(d => ({ ...d, extension: d.name.split(".").pop() }))
+        .map(d => ({
+          ...d,
+          extension: d.name.split(".").pop(),
+          params: params
+        }))
     )
 
 const getContentRecursively = params =>
@@ -167,81 +171,6 @@ app.get("/github", async (req, res) => {
   console.dir(params)
 
   res.send({ data: await getContentRecursively(params), params: params })
-
-  /*
-  // postLoadAllFromRepo -> postGetContent
-  action$ =>
-    action$.pipe(
-      ofType(POST_LOAD_ALL_FROM_REPO),
-      mergeMap(action =>
-        action.payload.data
-          .map(d => {
-            switch (d.type) {
-              case "file":
-                // get the content for this file
-                return postGetContent({ ...action.payload, ...d })
-              default:
-                // get all the content in this directory
-                return from(
-                  octokit.repos.getContent({
-                    ...action.payload,
-                    ...d
-                  })
-                ).pipe(postGetContent)
-            }
-          })
-      )
-    ),
-
-  // postGetContent -> postConvertContent
-  action$ =>
-    action$.pipe(
-      ofType(POST_GET_CONTENT),
-      mergeMap(action =>
-        ajax
-          .getJSON(action.payload.url)
-          .pipe(
-            map(response =>
-              postConvertContent({ ...response, meta: action.payload })
-            )
-          )
-      )
-    ),
-
-  // postConvertContent -> postConvertContentDone
-  action$ =>
-    action$.pipe(
-      ofType(POST_CONVERT_CONTENT),
-      map(({ payload: { content, ...rest } }) =>
-        postConvertContentDone({ content: decode(content), ...rest })
-      )
-    ),
-
-  // postGetContentDate -> postConvertContentDone
-  // TODO: link repo date with actual date
-  action$ =>
-    action$.pipe(
-      ofType(POST_GET_CONTENT_DATE),
-      mergeMap(action =>
-        from(
-          octokit.repos.getCommit({
-            owner: action.payload.meta.owner,
-            repo: action.payload.meta.repo,
-            sha: action.payload.sha
-          })
-        ).pipe(
-          map(response =>
-            postConvertContentDone({
-              ...action.payload,
-              date: response.author.date,
-              source: response.author.name
-            })
-          )
-        )
-      )
-    ),
-
-*/
 })
 
 app.listen(port)
