@@ -21,23 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { from, of } from "rxjs"
+import { of } from "rxjs"
+import { ajax } from "rxjs/ajax"
 import { mergeMap, catchError } from "rxjs/operators"
 import _ from "lodash"
-import Octokit from "@octokit/rest"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 
 export const REPO_GET_CONTENT = "REPO_GET_CONTENT"
 export const REPO_GET_CONTENT_DONE = "REPO_GET_CONTENT_DONE"
 export const AS_LIST_KEY = "list"
-export const octokit = Octokit({
-  timeout: 0,
-  headers: {
-    accept: "application/vnd.github.v3+json",
-    "user-agent": "octokit/rest.js v1.2.3"
-  }
-})
 
 export const { repoGetContent, clearGithubErrors } = createActions({
   [REPO_GET_CONTENT]: options => ({ ...options }),
@@ -74,30 +67,28 @@ export default handleActions(
 export const getContentEpic = action$ =>
   action$.pipe(
     ofType(REPO_GET_CONTENT),
-    mergeMap(action =>
-      from(
-        octokit.repos.getContent({
-          ...action.payload
-        })
-      ).pipe(
-        mergeMap(({ data, ...rest }) =>
-          of({
-            type: REPO_GET_CONTENT_DONE,
-            payload: { data, options: action.payload },
-            ...rest
-          })
-        ),
-        catchError(e =>
-          of({
-            type: REPO_GET_CONTENT_DONE,
-            payload: {
-              options: action.payload,
-              error: e
-            },
-            error: true
-          })
+    mergeMap(({ payload: { owner, repo, ref, path } }) =>
+      ajax
+        .get(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`)
+        .pipe(
+          mergeMap(({ data, ...rest }) =>
+            of({
+              type: REPO_GET_CONTENT_DONE,
+              payload: { data, options: { owner, repo, ref, path } },
+              ...rest
+            })
+          ),
+          catchError(e =>
+            of({
+              type: REPO_GET_CONTENT_DONE,
+              payload: {
+                options: { owner, repo, ref, path },
+                error: e
+              },
+              error: true
+            })
+          )
         )
-      )
     )
   )
 
