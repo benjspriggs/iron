@@ -60,7 +60,7 @@
     "precommit": "pretty-quick --staged",
     "prepush": "pretty-quick",
     "start:server": "nodemon src/server/index.js",
-    "serve": "npm run build && serve -s build"
+    "serve": "serve -s build"
   },
   "license": "MIT",
   "repository": {
