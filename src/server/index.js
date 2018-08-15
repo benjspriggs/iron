@@ -1,4 +1,16 @@
+require("dotenv").config()
+
 const express = require("express")
+const octokit = require("@octokit/rest")({
+  timeout: 0,
+  headers: {
+    accept: "application/vnd.github.v3+json",
+    "user-agent": "octokit/rest.js v15.9.4",
+    Authorization: "token " + process.env.GH_TOKEN
+  }
+})
+const Parallel = require("async-parallel")
+
 const _ = require("lodash")
 
 const config = {
@@ -111,6 +123,125 @@ app.delete("/post", (req, res, next) => {
     .del()
     .then(res.send)
     .catch(handleErr(res))
+})
+
+const getContentForParams = async params =>
+  await octokit.repos
+    .getContent(params)
+    .then(response => response.data)
+    .then(data =>
+      data
+        // only include files or directories
+        .filter(d => ["file", "dir"].includes(d.type))
+        .map(d => ({ ...d, extension: d.name.split(".").pop() }))
+    )
+
+const getContentRecursively = params =>
+  getContentForParams(params)
+    .then(
+      async data =>
+        await Parallel.map(data, async d => {
+          switch (d.type) {
+            case "file":
+              // get the content for this file
+              return d
+            default:
+              // get all the content in this directory
+              return await getContentForParams({
+                ...params,
+                ...d
+              })
+          }
+        })
+    )
+    // only include markdown and text file responses
+    .then(
+      async data =>
+        await Parallel.filter(data, d => ["md", "txt"].includes(d.extension))
+    )
+
+app.get("/github", async (req, res) => {
+  const params = req.query
+
+  console.log("fetching posts at the specified github repo:")
+  console.dir(params)
+
+  res.send({ data: await getContentRecursively(params), params: params })
+
+  /*
+  // postLoadAllFromRepo -> postGetContent
+  action$ =>
+    action$.pipe(
+      ofType(POST_LOAD_ALL_FROM_REPO),
+      mergeMap(action =>
+        action.payload.data
+          .map(d => {
+            switch (d.type) {
+              case "file":
+                // get the content for this file
+                return postGetContent({ ...action.payload, ...d })
+              default:
+                // get all the content in this directory
+                return from(
+                  octokit.repos.getContent({
+                    ...action.payload,
+                    ...d
+                  })
+                ).pipe(postGetContent)
+            }
+          })
+      )
+    ),
+
+  // postGetContent -> postConvertContent
+  action$ =>
+    action$.pipe(
+      ofType(POST_GET_CONTENT),
+      mergeMap(action =>
+        ajax
+          .getJSON(action.payload.url)
+          .pipe(
+            map(response =>
+              postConvertContent({ ...response, meta: action.payload })
+            )
+          )
+      )
+    ),
+
+  // postConvertContent -> postConvertContentDone
+  action$ =>
+    action$.pipe(
+      ofType(POST_CONVERT_CONTENT),
+      map(({ payload: { content, ...rest } }) =>
+        postConvertContentDone({ content: decode(content), ...rest })
+      )
+    ),
+
+  // postGetContentDate -> postConvertContentDone
+  // TODO: link repo date with actual date
+  action$ =>
+    action$.pipe(
+      ofType(POST_GET_CONTENT_DATE),
+      mergeMap(action =>
+        from(
+          octokit.repos.getCommit({
+            owner: action.payload.meta.owner,
+            repo: action.payload.meta.repo,
+            sha: action.payload.sha
+          })
+        ).pipe(
+          map(response =>
+            postConvertContentDone({
+              ...action.payload,
+              date: response.author.date,
+              source: response.author.name
+            })
+          )
+        )
+      )
+    ),
+
+*/
 })
 
 app.listen(port)
