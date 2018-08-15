@@ -31,18 +31,25 @@ import { ConnectedRouter } from "connected-react-router"
 import store, { history, persistor } from "./store"
 import { PersistGate } from "redux-persist/integration/react"
 import RefreshState from "./RefreshState"
+import { pollStart, pollStop } from "./dux/posts"
 
 import { Divider } from "semantic-ui-react"
 import "semantic-ui-css/semantic.min.css"
 
 const target = document.getElementById("root")
 
+const startPolling = dispatch => () => dispatch(pollStart())
+const stopPolling = dispatch => () => dispatch(pollStop())
+
 render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ConnectedRouter history={history}>
         <div>
-          <App />
+          <App
+            onPostsPageEnter={startPolling(store.dispatch)}
+            onPostsPageExit={stopPolling(store.dispatch)}
+          />
           <Divider />
           <RefreshState persistor={persistor} />
         </div>

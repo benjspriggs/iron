@@ -1,5 +1,7 @@
 node_modules/*
 package-lock.json
+data.db
+.env
 
 ## from https://github.com/github/gitignore/blob/master/Node.gitignore
 
