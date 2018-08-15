@@ -59,7 +59,8 @@
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
     "prepush": "pretty-quick",
-    "start:server": "nodemon src/server/index.js"
+    "start:server": "nodemon src/server/index.js",
+    "serve": "serve -s build"
   },
   "license": "MIT",
   "repository": {
