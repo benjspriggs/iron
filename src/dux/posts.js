@@ -90,13 +90,12 @@ const withRenderedMarkdown = post => {
   // parse this as markdown/ html
   const { content, ...rest } = post
   const tokens = new marked.Lexer().lex(content.join("\n"))
-  let withLinks = [...tokens]
-  withLinks.links = tokens.links
 
   return {
     ...rest,
+    title: tokens[0].text,
     content,
-    html: new marked.Parser().parse(withLinks)
+    html: new marked.Parser().parse(tokens)
   }
 }
 
