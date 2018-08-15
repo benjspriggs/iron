@@ -57,6 +57,8 @@ const handleErr = res => err => {
 
 app.post("/post", (req, res) => {
   const { title, content, source, date, meta, html } = req.body.post
+  console.log("recieved post for creation")
+  console.dir(req.body)
 
   knex("posts")
     .insert({
@@ -73,6 +75,8 @@ app.post("/post", (req, res) => {
 
 app.put("/post", (req, res, next) => {
   const { id, ...post } = req.body.post
+  console.log("updating post", id)
+  console.dir(req.body.post)
 
   knex("posts")
     .where("id", id)
@@ -87,6 +91,9 @@ app.get("/post", (req, res, next) => {
     : !_.isEmpty(req.body)
       ? req.body
       : true
+
+  console.log("searching for posts using following query:")
+  console.dir(query)
 
   knex("posts")
     .where(query)
