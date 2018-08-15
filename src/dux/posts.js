@@ -100,34 +100,42 @@ const withRenderedMarkdown = post => {
   }
 }
 
+const updateHTMLForPost = post => {
+  if (_.get(post, "meta.extension") === "md") {
+    return withRenderedMarkdown(post)
+  }
+  return post
+}
+
 const conformServerResponse = response =>
   response.posts
     .map(post => ({
       ...post,
       content: post.content ? post.content.split(response.newline) : null
     }))
+    .map(updateHTMLForPost)
     .reduce((posts, post) => ({ ...posts, [post.id]: post }), {})
 
 export default handleActions(
   {
-    [POST_CREATE]: (state, action) => {
+    POST_GET_RESPONSE: (state, action) => {
       const existingPosts = _.get(state, "posts", {})
+      let posts = conformServerResponse(action.payload)
+      let {
+        query: { id }
+      } = action.payload
 
-      let post = action.payload
-
-      if (!post.id) {
+      if (!id) {
         return
       }
 
-      if (_.get(post, "meta.extension") === "md") {
-        post = withRenderedMarkdown(post)
-      }
+      let post = updateHTMLForPost(posts[id])
 
       return {
         ...state,
         posts: {
           ...existingPosts,
-          [getKeyForPost(post)]: post
+          [id]: post
         }
       }
     },
