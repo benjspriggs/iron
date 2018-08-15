@@ -69,7 +69,10 @@ export const {
   pollStop
 } = createActions({
   [POST_GET_CONTENT]: any => any,
-  [POST_CONVERT_CONTENT]: any => any,
+  [POST_CONVERT_CONTENT]: [
+    ({ content, ...rest }, meta) => ({ content, meta, ...rest }),
+    (_, meta) => meta
+  ],
   [POST_CONVERT_CONTENT_DONE]: null,
   [POST_GET_CONTENT_DONE]: any => any,
   [POST_LOAD_ALL_FROM_REPO]: ({ owner, repo, path = "/", ref }) => ({
@@ -214,7 +217,7 @@ export const postsEpic = combineEpics(
           .pipe(
             mergeMap(response =>
               from(response.data).pipe(
-                map(datum => postGetContent({ ...datum, meta: action.payload }))
+                map(datum => postGetContent({ ...datum }))
               )
             )
           )
@@ -228,11 +231,7 @@ export const postsEpic = combineEpics(
       mergeMap(action =>
         ajax
           .getJSON(action.payload.url)
-          .pipe(
-            map(response =>
-              postConvertContent({ ...response, meta: action.payload })
-            )
-          )
+          .pipe(map(response => postConvertContent(response, action.payload)))
       )
     ),
 
