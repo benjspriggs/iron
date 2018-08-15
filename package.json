@@ -34,7 +34,7 @@
     "react-redux": "^5.0.7",
     "react-render-html": "^0.6.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.0.0-next.3e165448",
     "react-test-renderer": "^16.4.1",
     "redux": "^4.0.0",
     "redux-actions": "^2.4.0",
@@ -75,5 +75,17 @@
     "pretty-quick": "^1.6.0",
     "react-generate-props": "^0.3.0",
     "redux-devtools-extension": "^2.13.5"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
+    ]
   }
 }
