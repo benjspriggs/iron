@@ -25,7 +25,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Route, Switch } from "react-router"
 import { Link } from "react-router-dom"
-import { Container, Button, Icon } from "semantic-ui-react"
+import { Container, Responsive, Button, Icon } from "semantic-ui-react"
 import { connect } from "react-redux"
 
 import BlogPost from "./BlogPost"
@@ -43,13 +43,13 @@ const BlogPostFromId = connect(state => ({ posts: state.posts.posts }))(
 
     if (post) {
       return (
-        <Container>
+        <Responsive as={Container}>
           <BlogPost id={id} {...post} />
           <Button icon labelPosition="left" as={Link} to={`/edit/${id}`}>
             <Icon name="edit" />
             Edit
           </Button>
-        </Container>
+        </Responsive>
       )
     } else {
       return <NoMatch />

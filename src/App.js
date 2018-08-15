@@ -55,7 +55,7 @@ class App extends Component {
 
   render() {
     return (
-      <Container>
+      <Container fluid>
         <Header as="h1" attached="top">
           <Image src={logo} className="App-logo" alt="logo" />
           iron
@@ -77,7 +77,7 @@ class App extends Component {
 
         <Divider hidden />
 
-        <Container>
+        <Container fluid>
           <Switch>
             <Route exact path="/" component={PostsPage} />
             <Route exact path="/settings" component={SettingsPage} />
