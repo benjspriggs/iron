@@ -25,7 +25,14 @@
 // blobs into posts
 import { from, timer } from "rxjs"
 import { ajax } from "rxjs/ajax"
-import { filter, map, switchMap, mergeMap, takeUntil } from "rxjs/operators"
+import {
+  tap,
+  filter,
+  map,
+  switchMap,
+  mergeMap,
+  takeUntil
+} from "rxjs/operators"
 import { createActions, handleActions } from "redux-actions"
 import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
@@ -157,7 +164,7 @@ export default handleActions(
 
       const postKey = action.payload.id
       const existingPost = existingPosts[postKey]
-      const newPost = withRenderedMarkdown({
+      const newPost = updateHTMLForPost({
         ...existingPost,
         ...action.payload
       })
@@ -196,7 +203,7 @@ export const parsePostsFromTextBody = ({ meta, _links, content }) =>
     .filter(post => post.length)
     .map(([firstLine, ...rest]) => ({
       // TODO: pull from actual owner when we have that info
-      source: meta.owner,
+      source: meta.params.owner,
       url: _links.html,
       title: firstLine,
       content: [...rest],
@@ -310,7 +317,7 @@ export const postsEpic = combineEpics(
         ajax
           .post(
             `${config.API_BASE_URL}/post`,
-            { post: withRenderedMarkdown(action.payload) },
+            { post: updateHTMLForPost(action.payload) },
             { "Content-Type": "application/json" }
           )
           .pipe(
