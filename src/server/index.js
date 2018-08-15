@@ -176,3 +176,26 @@ app.get("/github", async (req, res) => {
 app.listen(port)
 
 console.log("Listening on port", port)
+
+const fs = require("fs")
+const path = require("path")
+const os = require("os")
+
+const hostname = `${os.hostname()}:${port}`
+
+app.use((req, res, next) => {
+  // if the base URL is not set
+  if (!process.env.API_BASE_URL) {
+    const base_url = `${req.protocol}://${hostname}`
+    fs.appendFile(
+      path.resolve(process.cwd(), ".env"),
+      "API_BASE_URL=" + base_url + newline,
+      err => {
+        if (err) throw err
+        console.log("Successfully updated the base URL")
+      }
+    )
+    process.env.API_BASE_URL = base_url
+  }
+  next()
+})

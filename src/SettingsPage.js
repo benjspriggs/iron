@@ -29,6 +29,7 @@ import GithubRepoForm from "./GithubRepoForm"
 import CurrentRepos from "./CurrentRepos"
 import GithubErrorsDisplay from "./GithubErrorsDisplay"
 import TextExportButton from "./TextExportButton"
+import ApiURLForm from "./ApiURLForm"
 
 const SettingsPage = () => (
   <Container>
@@ -41,6 +42,10 @@ const SettingsPage = () => (
         <Grid.Column>
           <Header as="h3">Full Form</Header>
           <GithubRepoForm />
+        </Grid.Column>
+        <Grid.Column>
+          <Header as="h3">Backend URL</Header>
+          <ApiURLForm />
         </Grid.Column>
       </Grid.Row>
 

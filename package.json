@@ -23,11 +23,8 @@
     "marked": "^0.4.0",
     "md5": "^2.2.1",
     "nodemon": "^1.18.3",
-    "pg": "^7.4.3",
-    "pg-connection-string": "^2.0.0",
-    "pg-promise": "^8.4.5",
     "prop-types": "^15.6.2",
-    "query-string-es5": "^6.1.4",
+    "query-string": "^6.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-lazy-load": "^3.0.13",
@@ -51,15 +48,14 @@
     "yup": "^0.25.1"
   },
   "scripts": {
-    "start": "concurrently 'npm run start:ui' 'npm run start:server'",
-    "start:ui": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
     "prepush": "pretty-quick",
-    "start:server": "nodemon src/server/index.js"
+    "serve": "serve -s build"
   },
   "license": "MIT",
   "repository": {
