@@ -31,7 +31,7 @@ import { ofType, combineEpics } from "redux-observable"
 import marked from "marked"
 import { decode } from "base-64"
 import _ from "lodash"
-import { stringify } from "query-string"
+import { stringify } from "query-string-es5"
 
 const config = {
   // TODO: make configurable
