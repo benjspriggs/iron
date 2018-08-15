@@ -48,15 +48,13 @@
     "yup": "^0.25.1"
   },
   "scripts": {
-    "start": "concurrently 'npm run start:ui' 'npm run start:server'",
-    "start:ui": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "test:ci": "CI=true npm test",
     "precommit": "pretty-quick --staged",
     "prepush": "pretty-quick",
-    "start:server": "nodemon src/server/index.js",
     "serve": "serve -s build"
   },
   "license": "MIT",
