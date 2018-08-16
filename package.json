@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": "10.x.x",
-    "npm": "6.1.0"
+    "npm": "6.x.x"
   },
   "dependencies": {
     "@axetroy/react-download": "^1.1.1",
