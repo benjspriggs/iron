@@ -31,7 +31,7 @@
     "redux-persist": "^5.10.0",
     "redux-reset": "^0.3.0",
     "redux-thunk": "^2.3.0",
-    "rich-markdown-editor": "^4.0.0",
+    "rich-markdown-editor": "^3.1.4",
     "rxjs": "^6.2.1",
     "semantic-ui-calendar-react": "^0.7.1",
     "semantic-ui-css": "^2.3.2",
