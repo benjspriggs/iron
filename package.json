@@ -1,28 +1,20 @@
 {
   "name": "iron",
   "version": "0.3.0",
-  "private": true,
+  "private": false,
   "engines": {
     "node": "10.x.x",
-    "npm": "6.1.0"
+    "npm": "6.x.x"
   },
   "dependencies": {
     "@axetroy/react-download": "^1.1.1",
-    "@octokit/rest": "^15.9.4",
-    "async-parallel": "^1.2.3",
     "base-64": "^0.1.0",
-    "concurrently": "^3.6.1",
     "connected-react-router": "^4.3.0",
-    "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "express": "^4.16.3",
     "formik": "^0.11.11",
     "history": "^4.7.2",
-    "knex": "^0.15.2",
     "marked": "^0.4.0",
-    "md5": "^2.2.1",
-    "nodemon": "^1.18.3",
     "prop-types": "^15.6.2",
     "query-string": "^6.1.0",
     "react": "^16.4.1",
@@ -39,12 +31,12 @@
     "redux-persist": "^5.10.0",
     "redux-reset": "^0.3.0",
     "redux-thunk": "^2.3.0",
-    "rich-markdown-editor": "^2.0.11",
+    "rich-markdown-editor": "^3.1.4",
     "rxjs": "^6.2.1",
     "semantic-ui-calendar-react": "^0.7.1",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-react": "^0.81.3",
-    "sqlite": "^2.9.2",
+    "slate-dev-environment": "^0.1.4",
     "yup": "^0.25.1"
   },
   "scripts": {
