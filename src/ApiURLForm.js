@@ -56,7 +56,7 @@ export default connect(
         .matches(/[^/]$/)
         .required()
     }),
-    handleSubmit: (values, { props: { update } }, setSubmitting) => {
+    handleSubmit: (values, { props: { update }, setSubmitting }) => {
       setSubmitting(true)
       update(values)
       setSubmitting(false)
